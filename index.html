@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⭐ 超级积分乐园</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-main: #0f0e17;
+  --bg-card: #1a1930;
+  --bg-card-hover: #222046;
+  --accent-orange: #ff8906;
+  --accent-pink: #e53170;
+  --accent-blue: #2cb1ff;
+  --accent-green: #0eca5c;
+  --accent-purple: #a855f7;
+  --accent-yellow: #ffd700;
+  --text-main: #fffffe;
+  --text-sub: #a7a9be;
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+body {
+  font-family: 'Fredoka', 'Noto Sans SC', sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(44, 177, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 137, 6, 0.08) 0%, transparent 50%);
+  animation: bgFloat 20s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(2%, -2%) rotate(1deg); }
+  66% { transform: translate(-1%, 1%) rotate(-1deg); }
+}
+
+/* Floating particles */
+.particles {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: particleFloat linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes particleFloat {
+  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.3; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+}
+
+/* Layout */
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 30px 0 20px;
+  position: relative;
+}
+
+.header h1 {
+  font-size: 2.8em;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  animation: titlePulse 3s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.header .subtitle {
+  color: var(--text-sub);
+  font-size: 1em;
+  margin-top: 6px;
+}
+
+/* Admin toggle */
+.admin-toggle {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: var(--bg-card);
+  border: 2px solid rgba(255,255,255,0.08);
+  color: var(--text-sub);
+  padding: 8px 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85em;
+  transition: all 0.3s;
+}
+
+.admin-toggle:hover { border-color: var(--accent-purple); color: var(--text-main); }
+.admin-toggle.active { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(168,85,247,0.1); }
+
+/* Stats bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-yellow)); }
+.stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-green)); }
+.stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple)); }
+.stat-card:nth-child(4)::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-blue)); }
+
+.stat-card .stat-icon { font-size: 1.8em; margin-bottom: 8px; }
+.stat-card .stat-value { font-size: 2em; font-weight: 700; }
+.stat-card .stat-label { font-size: 0.8em; color: var(--text-sub); margin-top: 4px; }
+
+.stat-card:nth-child(1) .stat-value { color: var(--accent-orange); }
+.stat-card:nth-child(2) .stat-value { color: var(--accent-blue); }
+.stat-card:nth-child(3) .stat-value { color: var(--accent-pink); }
+.stat-card:nth-child(4) .stat-value { color: var(--accent-green); }
+
+/* Level section */
+.level-section {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-section::after {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,137,6,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.level-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.level-badge {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  background: linear-gradient(135deg, rgba(255,137,6,0.2), rgba(229,49,112,0.2));
+  border: 2px solid rgba(255,137,6,0.3);
+  animation: badgePulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,137,6,0.3); }
+  50% { box-shadow: 0 0 20px 5px rgba(255,137,6,0.15); }
+}
+
+.level-text h3 { font-size: 1.3em; }
+.level-text p { color: var(--text-sub); font-size: 0.85em; margin-top: 2px; }
+
+.xp-bar-container {
+  position: relative;
+  z-index: 1;
+}
+
+.xp-bar-bg {
+  height: 24px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink), var(--accent-purple));
+  background-size: 200% 100%;
+  animation: xpShimmer 3s ease-in-out infinite;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.xp-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: xpGlint 2s ease-in-out infinite;
+}
+
+@keyframes xpShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes xpGlint {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.xp-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  color: var(--text-sub);
+  margin-top: 8px;
+}
+
+/* Main grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Task section */
+.section-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title span { font-size: 1.3em; }
+
+.tasks-panel {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.task-btn {
+  background: rgba(255,255,255,0.03);
+  border: 2px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm);
+  padding: 18px 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+  color: var(--text-main);
+}
+
+.task-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+}
+
+.task-btn:active {
+  transform: scale(0.95);
+}
+
+.task-btn .task-emoji { font-size: 2em; display: block; margin-bottom: 8px; }
+.task-btn .task-name { font-size: 0.9em; font-weight: 500; display: block; margin-bottom: 6px; }
+.task-btn .task-points {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink));
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.task-btn.earned {
+  animation: earnBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes earnBounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* Remove button in admin mode */
+.task-btn .remove-btn {
+  display: none;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px; height: 24px;
+  background: var(--accent-pink);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 2;
+}
+
+body.admin-mode .task-btn .remove-btn { display: flex; align-items: center; justify-content: center; }
+
+/* Add task form */
+.add-task-form {
+  display: none;
+  margin-top: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+}
+
+body.admin-mode .add-task-form { display: block; }
+
+.add-task-form .form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.add-task-form input, .add-task-form select {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.9em;
+}
+
+.add-task-form input::placeholder { color: var(--text-sub); }
+.add-task-form input:focus, .add-task-form select:focus { outline: none; border-color: var(--accent-purple); }
+
+.add-task-form button {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: white;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.add-task-form button:hover { transform: scale(1.05); }
+
+/* Calendar */
+.calendar-panel {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.calendar-nav h3 { font-size: 1.1em; }
+
+.calendar-nav button {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-main);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.calendar-nav button:hover { background: rgba(255,255,255,0.12); }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day-label {
+  text-align: center;
+  font-size: 0.75em;
+  color: var(--text-sub);
+  padding: 6px 0;
+  font-weight: 600;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.calendar-day:hover { background: rgba(255,255,255,0.06); }
+.calendar-day.empty { cursor: default; background: transparent; }
+.calendar-day.today { border: 2px solid var(--accent-blue); }
+
+.calendar-day .day-num { font-weight: 600; line-height: 1; }
+.calendar-day .day-pts {
+  font-size: 0.65em;
+  margin-top: 2px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.calendar-day.pts-low { background: rgba(44, 177, 255, 0.1); border-color: rgba(44, 177, 255, 0.15); }
+.calendar-day.pts-mid { background: rgba(14, 202, 92, 0.15); border-color: rgba(14, 202, 92, 0.2); }
+.calendar-day.pts-high { background: rgba(255, 137, 6, 0.2); border-color: rgba(255, 137, 6, 0.25); }
+.calendar-day.pts-super {
+  background: linear-gradient(135deg, rgba(255,137,6,0.25), rgba(229,49,112,0.25));
+  border-color: rgba(255,137,6,0.35);
+  animation: superDay 2s ease-in-out infinite;
+}
+
+@keyframes superDay { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 10px rgba(255,137,6,0.2); } }
+
+/* Today's log */
+.today-log {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 20px;
+  grid-column: 1 / -1;
+}
+
+.log-list {
+  max-height: 240px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  animation: logSlide 0.4s ease-out;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+@keyframes logSlide {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.log-item .log-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.log-item .log-emoji { font-size: 1.3em; }
+.log-item .log-name { font-weight: 500; font-size: 0.9em; }
+.log-item .log-time { color: var(--text-sub); font-size: 0.75em; }
+.log-item .log-pts {
+  font-weight: 700;
+  color: var(--accent-orange);
+  font-size: 0.95em;
+}
+
+.log-empty {
+  text-align: center;
+  color: var(--text-sub);
+  padding: 30px;
+  font-size: 0.9em;
+}
+
+/* Day detail modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  padding: 30px;
+  max-width: 420px;
+  width: 90%;
+  max-height: 70vh;
+  overflow-y: auto;
+  animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal h3 { margin-bottom: 16px; font-size: 1.2em; }
+
+.modal-close {
+  float: right;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  color: var(--text-sub);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-family: inherit;
+}
+
+.modal-close:hover { background: rgba(255,255,255,0.12); color: var(--text-main); }
+
+/* Confetti */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: confettiFall 1.5s ease-out forwards;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(80vh) rotate(720deg) scale(0.3); }
+}
+
+/* Points popup */
+.points-popup {
+  position: fixed;
+  pointer-events: none;
+  font-size: 2em;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  z-index: 998;
+  animation: pointsUp 1.2s ease-out forwards;
+}
+
+@keyframes pointsUp {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+}
+
+/* Streak fire */
+.streak-fire {
+  display: inline-block;
+  animation: fireWiggle 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes fireWiggle {
+  from { transform: rotate(-3deg) scale(1); }
+  to { transform: rotate(3deg) scale(1.05); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .main-grid { grid-template-columns: 1fr; }
+  .header h1 { font-size: 2em; }
+  .task-grid { grid-template-columns: 1fr; }
+  .admin-toggle { position: static; margin-top: 12px; }
+}
+
+/* Emoji selector */
+.emoji-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.emoji-opt {
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  background: rgba(255,255,255,0.04);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emoji-opt:hover { background: rgba(255,255,255,0.1); }
+.emoji-opt.selected { border-color: var(--accent-purple); background: rgba(168,85,247,0.15); }
+
+/* Delete log button (admin) */
+.log-item .log-delete {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--accent-pink);
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 2px 6px;
+  margin-left: 8px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.log-item .log-delete:hover { opacity: 1; }
+body.admin-mode .log-item .log-delete { display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+<div class="confetti-container" id="confetti"></div>
+
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>⭐ 超级积分乐园 ⭐</h1>
+    <div class="subtitle">每一份努力都值得被记录！</div>
+    <button class="admin-toggle" id="adminToggle" onclick="toggleAdmin()">🔧 家长模式</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-value" id="todayPts">0</div>
+      <div class="stat-label">今日积分</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-value" id="weekPts">0</div>
+      <div class="stat-label">本周积分</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🌟</div>
+      <div class="stat-value" id="totalPts">0</div>
+      <div class="stat-label">总积分</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><span class="streak-fire">🔥</span></div>
+      <div class="stat-value" id="streakDays">0</div>
+      <div class="stat-label">连续天数</div>
+    </div>
+  </div>
+
+  <!-- Level -->
+  <div class="level-section">
+    <div class="level-info">
+      <div class="level-badge" id="levelBadge">🌱</div>
+      <div class="level-text">
+        <h3 id="levelName">小萌新</h3>
+        <p id="levelDesc">完成更多任务来升级吧！</p>
+      </div>
+    </div>
+    <div class="xp-bar-container">
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
+      </div>
+      <div class="xp-text">
+        <span id="xpCurrent">0 / 50</span>
+        <span id="xpNext">下一级：小勇士</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-grid">
+    <!-- Tasks -->
+    <div class="tasks-panel">
+      <div class="section-title"><span>🎯</span> 今日任务</div>
+      <div class="task-grid" id="taskGrid"></div>
+      <div class="add-task-form" id="addTaskForm">
+        <div class="section-title" style="font-size:0.95em;margin-bottom:12px"><span>➕</span> 添加新任务</div>
+        <div class="emoji-picker" id="emojiPicker"></div>
+        <div class="form-row">
+          <input type="text" id="newTaskName" placeholder="任务名称" maxlength="20">
+          <input type="number" id="newTaskPoints" placeholder="分数" min="1" max="100" style="max-width:80px">
+        </div>
+        <button onclick="addTask()">添加任务</button>
+      </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="calendar-panel">
+      <div class="section-title"><span>📅</span> 积分日历</div>
+      <div class="calendar-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <h3 id="calendarTitle"></h3>
+        <button onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <!-- Today's log -->
+    <div class="today-log">
+      <div class="section-title"><span>📝</span> <span id="logTitle">今日记录</span></div>
+      <div class="log-list" id="logList">
+        <div class="log-empty">还没有记录哦，快去完成任务吧！💪</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Day detail modal -->
+<div class="modal-overlay" id="dayModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ===== Data =====
+const DEFAULT_TASKS = [
+  { id: 1, emoji: '📚', name: '完成作业', points: 10 },
+  { id: 2, emoji: '📖', name: '阅读30分钟', points: 15 },
+  { id: 3, emoji: '🧹', name: '整理房间', points: 8 },
+  { id: 4, emoji: '🍳', name: '帮忙做家务', points: 10 },
+  { id: 5, emoji: '🏃', name: '运动锻炼', points: 12 },
+  { id: 6, emoji: '🎹', name: '练习乐器', points: 15 },
+  { id: 7, emoji: '✍️', name: '练字一页', points: 8 },
+  { id: 8, emoji: '🧮', name: '额外练习题', points: 10 },
+];
+
+const LEVELS = [
+  { name: '小萌新', emoji: '🌱', minPts: 0, desc: '每个英雄都从这里出发！' },
+  { name: '小勇士', emoji: '⚔️', minPts: 50, desc: '已经迈出了第一步！' },
+  { name: '小达人', emoji: '🔥', minPts: 150, desc: '越来越厉害了！' },
+  { name: '小学霸', emoji: '🎓', minPts: 350, desc: '知识就是力量！' },
+  { name: '超级英雄', emoji: '🦸', minPts: 600, desc: '无人能挡！' },
+  { name: '传奇大师', emoji: '👑', minPts: 1000, desc: '传说中的存在！' },
+  { name: '宇宙之王', emoji: '🌌', minPts: 2000, desc: '已经突破天际！' },
+];
+
+const EMOJIS = ['📚','📖','🧹','🍳','🏃','🎹','✍️','🧮','🎨','🧪','💻','🌱','🎯','🧩','🔬','🎸','🏊','⚽','🧘','📝','🛏️','🦷','👕','🐕','🌻','🎭'];
+
+let tasks = [];
+let logs = {}; // { "2026-05-14": [{task, time, points}] }
+let calMonth, calYear;
+let selectedEmoji = '📚';
+let viewingDate = null;
+
+// ===== Init =====
+function init() {
+  loadData();
+  const now = new Date();
+  calMonth = now.getMonth();
+  calYear = now.getFullYear();
+  renderTasks();
+  renderCalendar();
+  updateStats();
+  renderLog(getDateKey(now));
+  setupParticles();
+  setupEmojiPicker();
+}
+
+function getDateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function todayKey() { return getDateKey(new Date()); }
+
+// ===== Storage =====
+function loadData() {
+  const saved = localStorage.getItem('kidPoints_tasks');
+  tasks = saved ? JSON.parse(saved) : [...DEFAULT_TASKS];
+  const savedLogs = localStorage.getItem('kidPoints_logs');
+  logs = savedLogs ? JSON.parse(savedLogs) : {};
+}
+
+function saveData() {
+  localStorage.setItem('kidPoints_tasks', JSON.stringify(tasks));
+  localStorage.setItem('kidPoints_logs', JSON.stringify(logs));
+}
+
+// ===== Tasks =====
+function renderTasks() {
+  const grid = document.getElementById('taskGrid');
+  grid.innerHTML = tasks.map(t => `
+    <button class="task-btn" onclick="earnPoints(${t.id}, event)" data-id="${t.id}">
+      <button class="remove-btn" onclick="event.stopPropagation();removeTask(${t.id})">✕</button>
+      <span class="task-emoji">${t.emoji}</span>
+      <span class="task-name">${t.name}</span>
+      <span class="task-points">+${t.points}分</span>
+    </button>
+  `).join('');
+}
+
+function earnPoints(taskId, event) {
+  if (document.body.classList.contains('admin-mode')) return;
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  const key = todayKey();
+  if (!logs[key]) logs[key] = [];
+  const now = new Date();
+  logs[key].push({
+    taskId: task.id,
+    emoji: task.emoji,
+    name: task.name,
+    points: task.points,
+    time: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
+  });
+  saveData();
+
+  // Animations
+  const btn = event.currentTarget;
+  btn.classList.remove('earned');
+  void btn.offsetWidth;
+  btn.classList.add('earned');
+
+  showPointsPopup(event, task.points);
+  spawnConfetti();
+
+  updateStats();
+  renderLog(viewingDate || todayKey());
+  renderCalendar();
+}
+
+function removeTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveData();
+  renderTasks();
+}
+
+function addTask() {
+  const name = document.getElementById('newTaskName').value.trim();
+  const pts = parseInt(document.getElementById('newTaskPoints').value);
+  if (!name || !pts || pts < 1) return;
+
+  const maxId = tasks.reduce((m, t) => Math.max(m, t.id), 0);
+  tasks.push({ id: maxId + 1, emoji: selectedEmoji, name, points: pts });
+  saveData();
+  renderTasks();
+
+  document.getElementById('newTaskName').value = '';
+  document.getElementById('newTaskPoints').value = '';
+}
+
+function setupEmojiPicker() {
+  const picker = document.getElementById('emojiPicker');
+  picker.innerHTML = EMOJIS.map(e =>
+    `<div class="emoji-opt ${e === selectedEmoji ? 'selected' : ''}" onclick="selectEmoji('${e}', this)">${e}</div>`
+  ).join('');
+}
+
+function selectEmoji(emoji, el) {
+  selectedEmoji = emoji;
+  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ===== Admin =====
+function toggleAdmin() {
+  document.body.classList.toggle('admin-mode');
+  document.getElementById('adminToggle').classList.toggle('active');
+}
+
+// ===== Stats =====
+function updateStats() {
+  const today = todayKey();
+  const todayPts = (logs[today] || []).reduce((s, l) => s + l.points, 0);
+  document.getElementById('todayPts').textContent = todayPts;
+
+  // Week
+  const now = new Date();
+  const dayOfWeek = now.getDay() || 7;
+  let weekPts = 0;
+  for (let i = 0; i < dayOfWeek; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const k = getDateKey(d);
+    weekPts += (logs[k] || []).reduce((s, l) => s + l.points, 0);
+  }
+  document.getElementById('weekPts').textContent = weekPts;
+
+  // Total
+  let totalPts = 0;
+  for (const k in logs) totalPts += logs[k].reduce((s, l) => s + l.points, 0);
+  document.getElementById('totalPts').textContent = totalPts;
+
+  // Streak
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const k = getDateKey(d);
+    if (logs[k] && logs[k].length > 0) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  document.getElementById('streakDays').textContent = streak;
+
+  // Level
+  updateLevel(totalPts);
+}
+
+function updateLevel(pts) {
+  let currentLevel = LEVELS[0];
+  let nextLevel = LEVELS[1];
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (pts >= LEVELS[i].minPts) {
+      currentLevel = LEVELS[i];
+      nextLevel = LEVELS[i + 1] || null;
+      break;
+    }
+  }
+
+  document.getElementById('levelBadge').textContent = currentLevel.emoji;
+  document.getElementById('levelName').textContent = currentLevel.name;
+  document.getElementById('levelDesc').textContent = currentLevel.desc;
+
+  if (nextLevel) {
+    const range = nextLevel.minPts - currentLevel.minPts;
+    const progress = pts - currentLevel.minPts;
+    const pct = Math.min(100, (progress / range) * 100);
+    document.getElementById('xpBar').style.width = pct + '%';
+    document.getElementById('xpCurrent').textContent = `${progress} / ${range}`;
+    document.getElementById('xpNext').textContent = `下一级：${nextLevel.name}`;
+  } else {
+    document.getElementById('xpBar').style.width = '100%';
+    document.getElementById('xpCurrent').textContent = '已满级！';
+    document.getElementById('xpNext').textContent = '🎉 最强王者';
+  }
+}
+
+// ===== Calendar =====
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('calendarTitle').textContent = `${calYear}年 ${monthNames[calMonth]}`;
+
+  const grid = document.getElementById('calendarGrid');
+  const dayLabels = ['一','二','三','四','五','六','日'];
+  let html = dayLabels.map(d => `<div class="calendar-day-label">${d}</div>`).join('');
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDay = firstDay.getDay() - 1;
+  if (startDay < 0) startDay = 6;
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+  const todayStr = getDateKey(today);
+
+  for (let i = 0; i < startDay; i++) html += '<div class="calendar-day empty"></div>';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayLogs = logs[key] || [];
+    const pts = dayLogs.reduce((s, l) => s + l.points, 0);
+    const isToday = key === todayStr;
+
+    let ptsClass = '';
+    if (pts > 0 && pts < 15) ptsClass = 'pts-low';
+    else if (pts >= 15 && pts < 30) ptsClass = 'pts-mid';
+    else if (pts >= 30 && pts < 50) ptsClass = 'pts-high';
+    else if (pts >= 50) ptsClass = 'pts-super';
+
+    html += `<div class="calendar-day ${ptsClass} ${isToday ? 'today' : ''}" onclick="showDayDetail('${key}', ${d})">
+      <span class="day-num">${d}</span>
+      ${pts > 0 ? `<span class="day-pts">+${pts}</span>` : ''}
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function showDayDetail(key, day) {
+  const dayLogs = logs[key] || [];
+  const modal = document.getElementById('dayModal');
+  document.getElementById('modalTitle').textContent = `${key} 的记录`;
+
+  if (dayLogs.length === 0) {
+    document.getElementById('modalContent').innerHTML = '<div class="log-empty">这天还没有记录</div>';
+  } else {
+    const total = dayLogs.reduce((s, l) => s + l.points, 0);
+    let html = dayLogs.map(l => `
+      <div class="log-item">
+        <div class="log-left">
+          <span class="log-emoji">${l.emoji}</span>
+          <span class="log-name">${l.name}</span>
+          <span class="log-time">${l.time}</span>
+        </div>
+        <span class="log-pts">+${l.points}</span>
+      </div>
+    `).join('');
+    html += `<div style="text-align:center;margin-top:16px;font-weight:700;color:var(--accent-orange);font-size:1.1em">总计 +${total} 分</div>`;
+    document.getElementById('modalContent').innerHTML = html;
+  }
+
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('dayModal').classList.remove('show');
+}
+
+document.getElementById('dayModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ===== Log =====
+function renderLog(dateKey) {
+  viewingDate = dateKey;
+  const list = document.getElementById('logList');
+  const dayLogs = logs[dateKey] || [];
+  const isToday = dateKey === todayKey();
+
+  document.getElementById('logTitle').textContent = isToday ? '今日记录' : `${dateKey} 的记录`;
+
+  if (dayLogs.length === 0) {
+    list.innerHTML = '<div class="log-empty">还没有记录哦，快去完成任务吧！💪</div>';
+    return;
+  }
+
+  list.innerHTML = dayLogs.map((l, i) => `
+    <div class="log-item">
+      <div class="log-left">
+        <span class="log-emoji">${l.emoji}</span>
+        <div>
+          <div class="log-name">${l.name}</div>
+          <div class="log-time">${l.time}</div>
+        </div>
+      </div>
+      <div>
+        <span class="log-pts">+${l.points}</span>
+        <button class="log-delete" onclick="deleteLog('${dateKey}', ${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteLog(dateKey, index) {
+  if (!logs[dateKey]) return;
+  logs[dateKey].splice(index, 1);
+  if (logs[dateKey].length === 0) delete logs[dateKey];
+  saveData();
+  updateStats();
+  renderLog(dateKey);
+  renderCalendar();
+}
+
+// ===== Effects =====
+function showPointsPopup(event, pts) {
+  const popup = document.createElement('div');
+  popup.className = 'points-popup';
+  popup.textContent = `+${pts} ⭐`;
+  popup.style.left = event.clientX + 'px';
+  popup.style.top = event.clientY + 'px';
+  document.body.appendChild(popup);
+  setTimeout(() => popup.remove(), 1200);
+}
+
+function spawnConfetti() {
+  const container = document.getElementById('confetti');
+  const colors = ['#ff8906','#e53170','#2cb1ff','#0eca5c','#a855f7','#ffd700'];
+  for (let i = 0; i < 30; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top = '-10px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.width = (Math.random() * 8 + 5) + 'px';
+    piece.style.height = (Math.random() * 8 + 5) + 'px';
+    piece.style.animationDuration = (Math.random() * 1 + 1) + 's';
+    piece.style.animationDelay = (Math.random() * 0.3) + 's';
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), 2000);
+  }
+}
+
+function setupParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['rgba(255,137,6,0.15)','rgba(44,177,255,0.15)','rgba(168,85,247,0.15)','rgba(14,202,92,0.15)'];
+  for (let i = 0; i < 15; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = p.style.height = (Math.random() * 6 + 3) + 'px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(p);
+  }
+}
+
+// ===== Start =====
+init();
+</script>
+</body>
+</html>
