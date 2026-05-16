@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>⭐ 超级积分乐园</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -11,7 +11,6 @@
 :root {
   --bg-main: #0f0e17;
   --bg-card: #1a1930;
-  --bg-card-hover: #222046;
   --accent-orange: #ff8906;
   --accent-pink: #e53170;
   --accent-blue: #2cb1ff;
@@ -20,8 +19,9 @@
   --accent-yellow: #ffd700;
   --text-main: #fffffe;
   --text-sub: #a7a9be;
-  --radius: 20px;
+  --radius: 18px;
   --radius-sm: 12px;
+  --nav-height: 64px;
 }
 
 body {
@@ -30,231 +30,169 @@ body {
   color: var(--text-main);
   min-height: 100vh;
   overflow-x: hidden;
+  padding-bottom: calc(var(--nav-height) + 20px);
 }
 
-/* Animated background */
 body::before {
   content: '';
   position: fixed;
   top: -50%; left: -50%;
   width: 200%; height: 200%;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(44, 177, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(255, 137, 6, 0.08) 0%, transparent 50%);
+    radial-gradient(ellipse at 20% 50%, rgba(168,85,247,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(44,177,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(255,137,6,0.06) 0%, transparent 50%);
   animation: bgFloat 20s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
 }
 
 @keyframes bgFloat {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(2%, -2%) rotate(1deg); }
-  66% { transform: translate(-1%, 1%) rotate(-1deg); }
+  0%, 100% { transform: translate(0,0); }
+  33% { transform: translate(2%,-2%); }
+  66% { transform: translate(-1%,1%); }
 }
 
-/* Floating particles */
-.particles {
+/* App container */
+.app { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 16px; }
+
+/* Pages */
+.page { display: none; }
+.page.active { display: block; animation: pageIn 0.3s ease-out; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bottom nav */
+.bottom-nav {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
+  bottom: 0; left: 0; right: 0;
+  height: var(--nav-height);
+  background: rgba(15,14,23,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  animation: particleFloat linear infinite;
-  opacity: 0.3;
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-family: inherit;
+  font-size: 0.65em;
+  font-weight: 500;
 }
 
-@keyframes particleFloat {
-  0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.3; }
-  90% { opacity: 0.3; }
-  100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
-}
+.nav-item .nav-icon { font-size: 1.8em; line-height: 1; }
+.nav-item.active { color: var(--accent-orange); }
+.nav-item.active .nav-icon { transform: scale(1.1); }
 
-/* Layout */
-.app {
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Header */
-.header {
+/* ===== Header ===== */
+.page-header {
   text-align: center;
-  padding: 30px 0 20px;
-  position: relative;
+  padding: 16px 0;
 }
 
-.header h1 {
-  font-size: 2.8em;
+.page-header h1 {
+  font-size: 1.6em;
   font-weight: 700;
   background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink), var(--accent-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: 2px;
-  animation: titlePulse 3s ease-in-out infinite;
 }
 
-@keyframes titlePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-}
+.page-header .subtitle { color: var(--text-sub); font-size: 0.8em; margin-top: 4px; }
 
-.header .subtitle {
-  color: var(--text-sub);
-  font-size: 1em;
-  margin-top: 6px;
-}
-
-/* Admin toggle */
-.admin-toggle {
-  position: absolute;
-  top: 30px;
-  right: 0;
-  background: var(--bg-card);
-  border: 2px solid rgba(255,255,255,0.08);
-  color: var(--text-sub);
-  padding: 8px 16px;
-  border-radius: 30px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.85em;
-  transition: all 0.3s;
-}
-
-.admin-toggle:hover { border-color: var(--accent-purple); color: var(--text-main); }
-.admin-toggle.active { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(168,85,247,0.1); }
-
-/* Stats bar */
-.stats-bar {
+/* ===== Stats row ===== */
+.stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin: 20px 0;
-}
-
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius);
-  padding: 20px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-}
-
-.stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--accent-orange), var(--accent-yellow)); }
-.stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-green)); }
-.stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple)); }
-.stat-card:nth-child(4)::before { background: linear-gradient(90deg, var(--accent-green), var(--accent-blue)); }
-
-.stat-card .stat-icon { font-size: 1.8em; margin-bottom: 8px; }
-.stat-card .stat-value { font-size: 2em; font-weight: 700; }
-.stat-card .stat-label { font-size: 0.8em; color: var(--text-sub); margin-top: 4px; }
-
-.stat-card:nth-child(1) .stat-value { color: var(--accent-orange); }
-.stat-card:nth-child(2) .stat-value { color: var(--accent-blue); }
-.stat-card:nth-child(3) .stat-value { color: var(--accent-pink); }
-.stat-card:nth-child(4) .stat-value { color: var(--accent-green); }
-
-/* Level section */
-.level-section {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.level-section::after {
-  content: '';
-  position: absolute;
-  top: -50%; right: -20%;
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(255,137,6,0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.level-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
-.level-badge {
-  width: 70px; height: 70px;
+.mini-stat {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 12px 6px;
+  text-align: center;
+}
+
+.mini-stat .ms-icon { font-size: 1.2em; }
+.mini-stat .ms-val { font-size: 1.3em; font-weight: 700; margin: 2px 0; }
+.mini-stat .ms-label { font-size: 0.6em; color: var(--text-sub); }
+.mini-stat:nth-child(1) .ms-val { color: var(--accent-orange); }
+.mini-stat:nth-child(2) .ms-val { color: var(--accent-blue); }
+.mini-stat:nth-child(3) .ms-val { color: var(--accent-pink); }
+.mini-stat:nth-child(4) .ms-val { color: var(--accent-green); }
+
+/* ===== Level bar ===== */
+.level-bar {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lb-badge {
+  width: 46px; height: 46px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2em;
+  font-size: 1.5em;
   background: linear-gradient(135deg, rgba(255,137,6,0.2), rgba(229,49,112,0.2));
   border: 2px solid rgba(255,137,6,0.3);
-  animation: badgePulse 2s ease-in-out infinite;
   flex-shrink: 0;
+  animation: badgePulse 2s ease-in-out infinite;
 }
 
 @keyframes badgePulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,137,6,0.3); }
-  50% { box-shadow: 0 0 20px 5px rgba(255,137,6,0.15); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,137,6,0.2); }
+  50% { box-shadow: 0 0 15px 3px rgba(255,137,6,0.1); }
 }
 
-.level-text h3 { font-size: 1.3em; }
-.level-text p { color: var(--text-sub); font-size: 0.85em; margin-top: 2px; }
+.lb-info { flex: 1; min-width: 0; }
+.lb-info .lb-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.lb-info .lb-name { font-weight: 600; font-size: 0.95em; }
+.lb-info .lb-next { font-size: 0.7em; color: var(--text-sub); }
 
-.xp-bar-container {
-  position: relative;
-  z-index: 1;
-}
-
-.xp-bar-bg {
-  height: 24px;
+.xp-track {
+  height: 10px;
   background: rgba(255,255,255,0.06);
-  border-radius: 12px;
+  border-radius: 5px;
   overflow: hidden;
-  position: relative;
 }
 
-.xp-bar-fill {
+.xp-fill {
   height: 100%;
-  border-radius: 12px;
+  border-radius: 5px;
   background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink), var(--accent-purple));
   background-size: 200% 100%;
   animation: xpShimmer 3s ease-in-out infinite;
-  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-}
-
-.xp-bar-fill::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  animation: xpGlint 2s ease-in-out infinite;
+  transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
 }
 
 @keyframes xpShimmer {
@@ -262,135 +200,328 @@ body::before {
   50% { background-position: 100% 50%; }
 }
 
-@keyframes xpGlint {
-  0%, 100% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
-}
-
-.xp-text {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8em;
-  color: var(--text-sub);
-  margin-top: 8px;
-}
-
-/* Main grid */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* Task section */
-.section-title {
-  font-size: 1.2em;
+/* ===== Section title ===== */
+.sec-title {
+  font-size: 1em;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
-.section-title span { font-size: 1.3em; }
+.sec-title span { font-size: 1.2em; }
 
-.tasks-panel {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius);
-  padding: 24px;
-}
-
+/* ===== Task grid ===== */
 .task-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .task-btn {
   background: rgba(255,255,255,0.03);
   border: 2px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-sm);
-  padding: 18px 14px;
+  padding: 16px 10px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-align: center;
   position: relative;
   overflow: hidden;
-  font-family: inherit;
   color: var(--text-main);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: all 0.2s;
 }
 
-.task-btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  border-color: rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.06);
-}
-
-.task-btn:active {
-  transform: scale(0.95);
-}
-
-.task-btn .task-emoji { font-size: 2em; display: block; margin-bottom: 8px; }
-.task-btn .task-name { font-size: 0.9em; font-weight: 500; display: block; margin-bottom: 6px; }
+.task-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.06); }
+.task-btn .task-emoji { font-size: 1.8em; display: block; margin-bottom: 6px; }
+.task-btn .task-name { font-size: 0.8em; font-weight: 500; display: block; margin-bottom: 5px; }
 .task-btn .task-points {
   display: inline-block;
   background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink));
-  padding: 3px 12px;
+  padding: 2px 10px;
   border-radius: 20px;
-  font-size: 0.8em;
+  font-size: 0.7em;
   font-weight: 600;
 }
 
-.task-btn.earned {
-  animation: earnBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+.task-btn.earned { animation: earnBounce 0.5s cubic-bezier(0.34,1.56,0.64,1); }
 
 @keyframes earnBounce {
   0% { transform: scale(1); }
-  30% { transform: scale(1.15); }
-  60% { transform: scale(0.95); }
+  30% { transform: scale(1.12); }
+  60% { transform: scale(0.96); }
   100% { transform: scale(1); }
 }
 
-/* Remove button in admin mode */
-.task-btn .remove-btn {
-  display: none;
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 24px; height: 24px;
-  background: var(--accent-pink);
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  line-height: 1;
-  z-index: 2;
+/* ===== Today log ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
 }
 
-body.admin-mode .task-btn .remove-btn { display: flex; align-items: center; justify-content: center; }
+.log-list { max-height: 300px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
 
-/* Add task form */
-.add-task-form {
-  display: none;
-  margin-top: 16px;
-  background: rgba(255,255,255,0.03);
-  border: 2px dashed rgba(255,255,255,0.1);
-  border-radius: var(--radius-sm);
-  padding: 18px;
-}
-
-body.admin-mode .add-task-form { display: block; }
-
-.add-task-form .form-row {
+.log-item {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  animation: logSlide 0.3s ease-out;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+@keyframes logSlide {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.log-item .log-left { display: flex; align-items: center; gap: 10px; }
+.log-item .log-emoji { font-size: 1.2em; }
+.log-item .log-name { font-weight: 500; font-size: 0.85em; }
+.log-item .log-time { color: var(--text-sub); font-size: 0.7em; }
+.log-item .log-pts { font-weight: 700; color: var(--accent-orange); font-size: 0.9em; }
+
+.log-empty { text-align: center; color: var(--text-sub); padding: 24px; font-size: 0.85em; }
+
+/* ===== Calendar ===== */
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.calendar-nav h3 { font-size: 1em; font-weight: 600; }
+
+.cal-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-main);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1em;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-label {
+  text-align: center;
+  font-size: 0.7em;
+  color: var(--text-sub);
+  padding: 4px 0;
+  font-weight: 600;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cal-day.empty { cursor: default; background: transparent; }
+.cal-day.today { border: 2px solid var(--accent-blue); }
+.cal-day .day-num { font-weight: 600; line-height: 1; }
+.cal-day .day-pts { font-size: 0.55em; margin-top: 1px; font-weight: 500; opacity: 0.9; }
+
+.cal-day.pts-low { background: rgba(44,177,255,0.1); border-color: rgba(44,177,255,0.15); }
+.cal-day.pts-mid { background: rgba(14,202,92,0.15); border-color: rgba(14,202,92,0.2); }
+.cal-day.pts-high { background: rgba(255,137,6,0.2); border-color: rgba(255,137,6,0.25); }
+.cal-day.pts-super {
+  background: linear-gradient(135deg, rgba(255,137,6,0.25), rgba(229,49,112,0.25));
+  border-color: rgba(255,137,6,0.35);
+}
+
+/* ===== Data page ===== */
+.data-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.data-card h3 {
+  font-size: 0.9em;
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+
+.bar-row {
+  display: flex;
+  align-items: center;
   gap: 10px;
+}
+
+.bar-label { width: 50px; font-size: 0.75em; color: var(--text-sub); text-align: right; flex-shrink: 0; }
+
+.bar-track {
+  flex: 1;
+  height: 20px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.6s ease-out;
+  min-width: 2px;
+}
+
+.bar-val { width: 40px; font-size: 0.75em; font-weight: 600; }
+
+/* Top tasks */
+.top-task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.top-task-item:last-child { border-bottom: none; }
+.top-task-item .tt-left { display: flex; align-items: center; gap: 10px; }
+.top-task-item .tt-rank { font-size: 1.2em; width: 30px; text-align: center; }
+.top-task-item .tt-name { font-size: 0.85em; font-weight: 500; }
+.top-task-item .tt-count { font-size: 0.7em; color: var(--text-sub); }
+.top-task-item .tt-pts { font-weight: 700; color: var(--accent-orange); font-size: 0.9em; }
+
+/* Big number */
+.big-nums {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.big-num {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 18px;
+  text-align: center;
+}
+
+.big-num .bn-val { font-size: 2em; font-weight: 700; }
+.big-num .bn-label { font-size: 0.7em; color: var(--text-sub); margin-top: 4px; }
+
+/* ===== Settings page ===== */
+.setting-group {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.setting-group-title {
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 14px 16px 10px;
+  color: var(--text-sub);
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.setting-item .si-left { display: flex; align-items: center; gap: 12px; }
+.setting-item .si-icon { font-size: 1.3em; }
+.setting-item .si-name { font-size: 0.85em; font-weight: 500; }
+.setting-item .si-desc { font-size: 0.7em; color: var(--text-sub); margin-top: 2px; }
+
+/* Task list in settings */
+.task-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.task-list-item .tl-left { display: flex; align-items: center; gap: 10px; }
+.task-list-item .tl-emoji { font-size: 1.3em; }
+.task-list-item .tl-name { font-size: 0.85em; font-weight: 500; }
+.task-list-item .tl-pts { font-size: 0.75em; color: var(--accent-orange); }
+
+.tl-del {
+  background: rgba(229,49,112,0.15);
+  border: none;
+  color: var(--accent-pink);
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1em;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Add task form in settings */
+.add-form { padding: 16px; }
+
+.emoji-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.emoji-opt {
+  width: 34px; height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em;
+  background: rgba(255,255,255,0.04);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.emoji-opt.selected { border-color: var(--accent-purple); background: rgba(168,85,247,0.15); }
+
+.form-row {
+  display: flex;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
-.add-task-form input, .add-task-form select {
+.form-input {
   flex: 1;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
@@ -398,13 +529,13 @@ body.admin-mode .add-task-form { display: block; }
   padding: 10px 14px;
   color: var(--text-main);
   font-family: inherit;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
-.add-task-form input::placeholder { color: var(--text-sub); }
-.add-task-form input:focus, .add-task-form select:focus { outline: none; border-color: var(--accent-purple); }
+.form-input::placeholder { color: var(--text-sub); }
+.form-input:focus { outline: none; border-color: var(--accent-purple); }
 
-.add-task-form button {
+.btn-primary {
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
   border: none;
   border-radius: 10px;
@@ -412,158 +543,35 @@ body.admin-mode .add-task-form { display: block; }
   color: white;
   font-family: inherit;
   font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.add-task-form button:hover { transform: scale(1.05); }
-
-/* Calendar */
-.calendar-panel {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius);
-  padding: 24px;
-}
-
-.calendar-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.calendar-nav h3 { font-size: 1.1em; }
-
-.calendar-nav button {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--text-main);
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.1em;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-
-.calendar-nav button:hover { background: rgba(255,255,255,0.12); }
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-}
-
-.calendar-day-label {
-  text-align: center;
-  font-size: 0.75em;
-  color: var(--text-sub);
-  padding: 6px 0;
-  font-weight: 600;
-}
-
-.calendar-day {
-  aspect-ratio: 1;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: 0.85em;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
 }
 
-.calendar-day:hover { background: rgba(255,255,255,0.06); }
-.calendar-day.empty { cursor: default; background: transparent; }
-.calendar-day.today { border: 2px solid var(--accent-blue); }
-
-.calendar-day .day-num { font-weight: 600; line-height: 1; }
-.calendar-day .day-pts {
-  font-size: 0.65em;
-  margin-top: 2px;
-  font-weight: 500;
-  opacity: 0.9;
-}
-
-.calendar-day.pts-low { background: rgba(44, 177, 255, 0.1); border-color: rgba(44, 177, 255, 0.15); }
-.calendar-day.pts-mid { background: rgba(14, 202, 92, 0.15); border-color: rgba(14, 202, 92, 0.2); }
-.calendar-day.pts-high { background: rgba(255, 137, 6, 0.2); border-color: rgba(255, 137, 6, 0.25); }
-.calendar-day.pts-super {
-  background: linear-gradient(135deg, rgba(255,137,6,0.25), rgba(229,49,112,0.25));
-  border-color: rgba(255,137,6,0.35);
-  animation: superDay 2s ease-in-out infinite;
-}
-
-@keyframes superDay { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 10px rgba(255,137,6,0.2); } }
-
-/* Today's log */
-.today-log {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-top: 20px;
-  grid-column: 1 / -1;
-}
-
-.log-list {
-  max-height: 240px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.1) transparent;
-}
-
-.log-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  background: rgba(255,255,255,0.02);
+.btn-danger {
+  background: rgba(229,49,112,0.15);
+  border: 1px solid rgba(229,49,112,0.3);
   border-radius: 10px;
-  margin-bottom: 8px;
-  animation: logSlide 0.4s ease-out;
-  border: 1px solid rgba(255,255,255,0.04);
+  padding: 12px 20px;
+  color: var(--accent-pink);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  margin-top: 8px;
 }
 
-@keyframes logSlide {
-  from { opacity: 0; transform: translateX(-20px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.log-item .log-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.log-item .log-emoji { font-size: 1.3em; }
-.log-item .log-name { font-weight: 500; font-size: 0.9em; }
-.log-item .log-time { color: var(--text-sub); font-size: 0.75em; }
-.log-item .log-pts {
-  font-weight: 700;
-  color: var(--accent-orange);
-  font-size: 0.95em;
-}
-
-.log-empty {
-  text-align: center;
-  color: var(--text-sub);
-  padding: 30px;
-  font-size: 0.9em;
-}
-
-/* Day detail modal */
+/* Modal */
 .modal-overlay {
   display: none;
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 100;
   align-items: center;
   justify-content: center;
@@ -575,8 +583,8 @@ body.admin-mode .add-task-form { display: block; }
   background: var(--bg-card);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius);
-  padding: 30px;
-  max-width: 420px;
+  padding: 24px;
+  max-width: 380px;
   width: 90%;
   max-height: 70vh;
   overflow-y: auto;
@@ -588,34 +596,25 @@ body.admin-mode .add-task-form { display: block; }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.modal h3 { margin-bottom: 16px; font-size: 1.2em; }
+.modal h3 { margin-bottom: 14px; font-size: 1.1em; }
 
 .modal-close {
   float: right;
   background: rgba(255,255,255,0.06);
   border: none;
   color: var(--text-sub);
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 1em;
   font-family: inherit;
 }
 
-.modal-close:hover { background: rgba(255,255,255,0.12); color: var(--text-main); }
-
 /* Confetti */
-.confetti-container {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 999;
-}
+.confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
 
 .confetti-piece {
   position: absolute;
-  width: 10px;
-  height: 10px;
   animation: confettiFall 1.5s ease-out forwards;
 }
 
@@ -628,172 +627,191 @@ body.admin-mode .add-task-form { display: block; }
 .points-popup {
   position: fixed;
   pointer-events: none;
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: 700;
   color: var(--accent-yellow);
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 20px rgba(255,215,0,0.5);
   z-index: 998;
   animation: pointsUp 1.2s ease-out forwards;
 }
 
 @keyframes pointsUp {
   0% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+  100% { opacity: 0; transform: translateY(-100px) scale(1.4); }
 }
 
 /* Streak fire */
-.streak-fire {
-  display: inline-block;
-  animation: fireWiggle 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes fireWiggle {
-  from { transform: rotate(-3deg) scale(1); }
-  to { transform: rotate(3deg) scale(1.05); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .main-grid { grid-template-columns: 1fr; }
-  .header h1 { font-size: 2em; }
-  .task-grid { grid-template-columns: 1fr; }
-  .admin-toggle { position: static; margin-top: 12px; }
-}
-
-/* Emoji selector */
-.emoji-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.emoji-opt {
-  width: 36px; height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2em;
-  background: rgba(255,255,255,0.04);
-  border: 2px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.emoji-opt:hover { background: rgba(255,255,255,0.1); }
-.emoji-opt.selected { border-color: var(--accent-purple); background: rgba(168,85,247,0.15); }
-
-/* Delete log button (admin) */
-.log-item .log-delete {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--accent-pink);
-  cursor: pointer;
-  font-size: 1.1em;
-  padding: 2px 6px;
-  margin-left: 8px;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-.log-item .log-delete:hover { opacity: 1; }
-body.admin-mode .log-item .log-delete { display: inline-block; }
+.streak-fire { display: inline-block; animation: fireWiggle 0.5s ease-in-out infinite alternate; }
+@keyframes fireWiggle { from { transform: rotate(-3deg); } to { transform: rotate(3deg) scale(1.05); } }
 </style>
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
 <div class="confetti-container" id="confetti"></div>
 
 <div class="app">
-  <!-- Header -->
-  <div class="header">
-    <h1>⭐ 超级积分乐园 ⭐</h1>
-    <div class="subtitle">每一份努力都值得被记录！</div>
-    <button class="admin-toggle" id="adminToggle" onclick="toggleAdmin()">🔧 家长模式</button>
-  </div>
+  <!-- ========== HOME PAGE ========== -->
+  <div class="page active" id="page-home">
+    <div class="page-header">
+      <h1>⭐ 超级积分乐园 ⭐</h1>
+      <div class="subtitle">每一份努力都值得被记录！</div>
+    </div>
 
-  <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat-card">
-      <div class="stat-icon">🏆</div>
-      <div class="stat-value" id="todayPts">0</div>
-      <div class="stat-label">今日积分</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">📊</div>
-      <div class="stat-value" id="weekPts">0</div>
-      <div class="stat-label">本周积分</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">🌟</div>
-      <div class="stat-value" id="totalPts">0</div>
-      <div class="stat-label">总积分</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon"><span class="streak-fire">🔥</span></div>
-      <div class="stat-value" id="streakDays">0</div>
-      <div class="stat-label">连续天数</div>
-    </div>
-  </div>
-
-  <!-- Level -->
-  <div class="level-section">
-    <div class="level-info">
-      <div class="level-badge" id="levelBadge">🌱</div>
-      <div class="level-text">
-        <h3 id="levelName">小萌新</h3>
-        <p id="levelDesc">完成更多任务来升级吧！</p>
+    <!-- Quick stats -->
+    <div class="stats-row">
+      <div class="mini-stat">
+        <div class="ms-icon">🏆</div>
+        <div class="ms-val" id="s_today">0</div>
+        <div class="ms-label">今日</div>
+      </div>
+      <div class="mini-stat">
+        <div class="ms-icon">📊</div>
+        <div class="ms-val" id="s_week">0</div>
+        <div class="ms-label">本周</div>
+      </div>
+      <div class="mini-stat">
+        <div class="ms-icon">🌟</div>
+        <div class="ms-val" id="s_total">0</div>
+        <div class="ms-label">总计</div>
+      </div>
+      <div class="mini-stat">
+        <div class="ms-icon"><span class="streak-fire">🔥</span></div>
+        <div class="ms-val" id="s_streak">0</div>
+        <div class="ms-label">连续</div>
       </div>
     </div>
-    <div class="xp-bar-container">
-      <div class="xp-bar-bg">
-        <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
-      </div>
-      <div class="xp-text">
-        <span id="xpCurrent">0 / 50</span>
-        <span id="xpNext">下一级：小勇士</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- Main content -->
-  <div class="main-grid">
-    <!-- Tasks -->
-    <div class="tasks-panel">
-      <div class="section-title"><span>🎯</span> 今日任务</div>
-      <div class="task-grid" id="taskGrid"></div>
-      <div class="add-task-form" id="addTaskForm">
-        <div class="section-title" style="font-size:0.95em;margin-bottom:12px"><span>➕</span> 添加新任务</div>
-        <div class="emoji-picker" id="emojiPicker"></div>
-        <div class="form-row">
-          <input type="text" id="newTaskName" placeholder="任务名称" maxlength="20">
-          <input type="number" id="newTaskPoints" placeholder="分数" min="1" max="100" style="max-width:80px">
+    <!-- Level -->
+    <div class="level-bar">
+      <div class="lb-badge" id="lvBadge">🌱</div>
+      <div class="lb-info">
+        <div class="lb-top">
+          <span class="lb-name" id="lvName">小萌新</span>
+          <span class="lb-next" id="lvNext">下一级：小勇士</span>
         </div>
-        <button onclick="addTask()">添加任务</button>
+        <div class="xp-track">
+          <div class="xp-fill" id="xpBar" style="width:0%"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Calendar -->
-    <div class="calendar-panel">
-      <div class="section-title"><span>📅</span> 积分日历</div>
-      <div class="calendar-nav">
-        <button onclick="changeMonth(-1)">‹</button>
-        <h3 id="calendarTitle"></h3>
-        <button onclick="changeMonth(1)">›</button>
-      </div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-    </div>
+    <!-- Tasks -->
+    <div class="sec-title"><span>🎯</span> 点击打卡</div>
+    <div class="task-grid" id="taskGrid"></div>
 
-    <!-- Today's log -->
-    <div class="today-log">
-      <div class="section-title"><span>📝</span> <span id="logTitle">今日记录</span></div>
+    <!-- Today log -->
+    <div class="card">
+      <div class="sec-title"><span>📝</span> 今日记录</div>
       <div class="log-list" id="logList">
         <div class="log-empty">还没有记录哦，快去完成任务吧！💪</div>
       </div>
     </div>
+  </div>
+
+  <!-- ========== CALENDAR PAGE ========== -->
+  <div class="page" id="page-calendar">
+    <div class="page-header"><h1>📅 积分日历</h1></div>
+    <div class="card">
+      <div class="calendar-nav">
+        <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
+        <h3 id="calTitle"></h3>
+        <button class="cal-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="calendar-grid" id="calGrid"></div>
+    </div>
+
+    <!-- Selected day log -->
+    <div class="card" id="calDayCard" style="display:none">
+      <div class="sec-title"><span>📋</span> <span id="calDayTitle">选中日期</span></div>
+      <div class="log-list" id="calDayLog"></div>
+    </div>
+  </div>
+
+  <!-- ========== DATA PAGE ========== -->
+  <div class="page" id="page-data">
+    <div class="page-header"><h1>📊 数据统计</h1></div>
+
+    <div class="big-nums">
+      <div class="big-num">
+        <div class="bn-val" id="d_total" style="color:var(--accent-orange)">0</div>
+        <div class="bn-label">累计总积分</div>
+      </div>
+      <div class="big-num">
+        <div class="bn-val" id="d_days" style="color:var(--accent-blue)">0</div>
+        <div class="bn-label">打卡天数</div>
+      </div>
+      <div class="big-num">
+        <div class="bn-val" id="d_tasks" style="color:var(--accent-green)">0</div>
+        <div class="bn-label">完成任务数</div>
+      </div>
+      <div class="big-num">
+        <div class="bn-val" id="d_avg" style="color:var(--accent-purple)">0</div>
+        <div class="bn-label">日均积分</div>
+      </div>
+    </div>
+
+    <!-- Weekly chart -->
+    <div class="data-card">
+      <h3>📈 最近7天</h3>
+      <div class="bar-chart" id="weekChart"></div>
+    </div>
+
+    <!-- Top tasks -->
+    <div class="data-card">
+      <h3>🏅 任务排行榜</h3>
+      <div id="topTasks"></div>
+    </div>
+  </div>
+
+  <!-- ========== SETTINGS PAGE ========== -->
+  <div class="page" id="page-settings">
+    <div class="page-header"><h1>⚙️ 设置</h1></div>
+
+    <!-- Task management -->
+    <div class="setting-group">
+      <div class="setting-group-title">📋 任务管理</div>
+      <div id="taskListSettings"></div>
+      <div class="add-form">
+        <div class="sec-title" style="font-size:0.85em"><span>➕</span> 添加新任务</div>
+        <div class="emoji-picker" id="emojiPicker"></div>
+        <div class="form-row">
+          <input class="form-input" type="text" id="newTaskName" placeholder="任务名称" maxlength="20">
+          <input class="form-input" type="number" id="newTaskPoints" placeholder="分数" min="1" max="100" style="max-width:70px">
+        </div>
+        <button class="btn-primary" onclick="addTask()">添加任务</button>
+      </div>
+    </div>
+
+    <!-- Data management -->
+    <div class="setting-group">
+      <div class="setting-group-title">🗄️ 数据管理</div>
+      <div style="padding:14px 16px">
+        <button class="btn-primary" onclick="exportData()" style="margin-bottom:8px">📤 导出数据</button>
+        <button class="btn-primary" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn-danger" onclick="clearAllData()">🗑️ 清除所有数据</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom nav -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="switchPage('home')">
+    <span class="nav-icon">🏠</span>
+    <span>首页</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('calendar')">
+    <span class="nav-icon">📅</span>
+    <span>日历</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('data')">
+    <span class="nav-icon">📊</span>
+    <span>数据</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('settings')">
+    <span class="nav-icon">⚙️</span>
+    <span>设置</span>
   </div>
 </div>
 
@@ -820,22 +838,18 @@ const DEFAULT_TASKS = [
 ];
 
 const LEVELS = [
-  { name: '小萌新', emoji: '🌱', minPts: 0, desc: '每个英雄都从这里出发！' },
-  { name: '小勇士', emoji: '⚔️', minPts: 50, desc: '已经迈出了第一步！' },
-  { name: '小达人', emoji: '🔥', minPts: 150, desc: '越来越厉害了！' },
-  { name: '小学霸', emoji: '🎓', minPts: 350, desc: '知识就是力量！' },
-  { name: '超级英雄', emoji: '🦸', minPts: 600, desc: '无人能挡！' },
-  { name: '传奇大师', emoji: '👑', minPts: 1000, desc: '传说中的存在！' },
-  { name: '宇宙之王', emoji: '🌌', minPts: 2000, desc: '已经突破天际！' },
+  { name: '小萌新', emoji: '🌱', min: 0 },
+  { name: '小勇士', emoji: '⚔️', min: 50 },
+  { name: '小达人', emoji: '🔥', min: 150 },
+  { name: '小学霸', emoji: '🎓', min: 350 },
+  { name: '超级英雄', emoji: '🦸', min: 600 },
+  { name: '传奇大师', emoji: '👑', min: 1000 },
+  { name: '宇宙之王', emoji: '🌌', min: 2000 },
 ];
 
-const EMOJIS = ['📚','📖','🧹','🍳','🏃','🎹','✍️','🧮','🎨','🧪','💻','🌱','🎯','🧩','🔬','🎸','🏊','⚽','🧘','📝','🛏️','🦷','👕','🐕','🌻','🎭'];
+const EMOJIS = ['📚','📖','🧹','🍳','🏃','🎹','✍️','🧮','🎨','🧪','💻','🌱','🎯','🧩','🔬','🎸','🏊','⚽','🧘','📝','🛏️','🦷','👕','🐕'];
 
-let tasks = [];
-let logs = {}; // { "2026-05-14": [{task, time, points}] }
-let calMonth, calYear;
-let selectedEmoji = '📚';
-let viewingDate = null;
+let tasks = [], logs = {}, calMonth, calYear, selectedEmoji = '📚';
 
 // ===== Init =====
 function init() {
@@ -843,64 +857,71 @@ function init() {
   const now = new Date();
   calMonth = now.getMonth();
   calYear = now.getFullYear();
-  renderTasks();
-  renderCalendar();
-  updateStats();
-  renderLog(getDateKey(now));
-  setupParticles();
+  renderAll();
   setupEmojiPicker();
 }
 
 function getDateKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-
 function todayKey() { return getDateKey(new Date()); }
 
-// ===== Storage =====
 function loadData() {
-  const saved = localStorage.getItem('kidPoints_tasks');
-  tasks = saved ? JSON.parse(saved) : [...DEFAULT_TASKS];
-  const savedLogs = localStorage.getItem('kidPoints_logs');
-  logs = savedLogs ? JSON.parse(savedLogs) : {};
+  const s1 = localStorage.getItem('kp_tasks');
+  tasks = s1 ? JSON.parse(s1) : DEFAULT_TASKS.map(t => ({...t}));
+  const s2 = localStorage.getItem('kp_logs');
+  logs = s2 ? JSON.parse(s2) : {};
 }
 
 function saveData() {
-  localStorage.setItem('kidPoints_tasks', JSON.stringify(tasks));
-  localStorage.setItem('kidPoints_logs', JSON.stringify(logs));
+  localStorage.setItem('kp_tasks', JSON.stringify(tasks));
+  localStorage.setItem('kp_logs', JSON.stringify(logs));
+}
+
+function renderAll() {
+  renderTasks();
+  renderLog();
+  renderCalendar();
+  renderData();
+  renderTaskSettings();
+  updateStats();
+}
+
+// ===== Navigation =====
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item')[['home','calendar','data','settings'].indexOf(name)].classList.add('active');
+  if (name === 'data') renderData();
+  if (name === 'calendar') renderCalendar();
+  if (name === 'settings') renderTaskSettings();
+  window.scrollTo(0, 0);
 }
 
 // ===== Tasks =====
 function renderTasks() {
-  const grid = document.getElementById('taskGrid');
-  grid.innerHTML = tasks.map(t => `
-    <button class="task-btn" onclick="earnPoints(${t.id}, event)" data-id="${t.id}">
-      <button class="remove-btn" onclick="event.stopPropagation();removeTask(${t.id})">✕</button>
+  document.getElementById('taskGrid').innerHTML = tasks.map(t => `
+    <div class="task-btn" onclick="earnPoints(${t.id}, event)" data-id="${t.id}">
       <span class="task-emoji">${t.emoji}</span>
       <span class="task-name">${t.name}</span>
       <span class="task-points">+${t.points}分</span>
-    </button>
+    </div>
   `).join('');
 }
 
 function earnPoints(taskId, event) {
-  if (document.body.classList.contains('admin-mode')) return;
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
-
   const key = todayKey();
   if (!logs[key]) logs[key] = [];
   const now = new Date();
   logs[key].push({
-    taskId: task.id,
-    emoji: task.emoji,
-    name: task.name,
-    points: task.points,
+    taskId: task.id, emoji: task.emoji, name: task.name, points: task.points,
     time: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
   });
   saveData();
 
-  // Animations
   const btn = event.currentTarget;
   btn.classList.remove('earned');
   void btn.offsetWidth;
@@ -908,285 +929,320 @@ function earnPoints(taskId, event) {
 
   showPointsPopup(event, task.points);
   spawnConfetti();
-
   updateStats();
-  renderLog(viewingDate || todayKey());
-  renderCalendar();
-}
-
-function removeTask(id) {
-  tasks = tasks.filter(t => t.id !== id);
-  saveData();
-  renderTasks();
-}
-
-function addTask() {
-  const name = document.getElementById('newTaskName').value.trim();
-  const pts = parseInt(document.getElementById('newTaskPoints').value);
-  if (!name || !pts || pts < 1) return;
-
-  const maxId = tasks.reduce((m, t) => Math.max(m, t.id), 0);
-  tasks.push({ id: maxId + 1, emoji: selectedEmoji, name, points: pts });
-  saveData();
-  renderTasks();
-
-  document.getElementById('newTaskName').value = '';
-  document.getElementById('newTaskPoints').value = '';
-}
-
-function setupEmojiPicker() {
-  const picker = document.getElementById('emojiPicker');
-  picker.innerHTML = EMOJIS.map(e =>
-    `<div class="emoji-opt ${e === selectedEmoji ? 'selected' : ''}" onclick="selectEmoji('${e}', this)">${e}</div>`
-  ).join('');
-}
-
-function selectEmoji(emoji, el) {
-  selectedEmoji = emoji;
-  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-// ===== Admin =====
-function toggleAdmin() {
-  document.body.classList.toggle('admin-mode');
-  document.getElementById('adminToggle').classList.toggle('active');
+  renderLog();
 }
 
 // ===== Stats =====
 function updateStats() {
   const today = todayKey();
   const todayPts = (logs[today] || []).reduce((s, l) => s + l.points, 0);
-  document.getElementById('todayPts').textContent = todayPts;
+  document.getElementById('s_today').textContent = todayPts;
 
-  // Week
   const now = new Date();
-  const dayOfWeek = now.getDay() || 7;
+  const dow = now.getDay() || 7;
   let weekPts = 0;
-  for (let i = 0; i < dayOfWeek; i++) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const k = getDateKey(d);
-    weekPts += (logs[k] || []).reduce((s, l) => s + l.points, 0);
+  for (let i = 0; i < dow; i++) {
+    const d = new Date(now); d.setDate(d.getDate() - i);
+    weekPts += (logs[getDateKey(d)] || []).reduce((s, l) => s + l.points, 0);
   }
-  document.getElementById('weekPts').textContent = weekPts;
+  document.getElementById('s_week').textContent = weekPts;
 
-  // Total
   let totalPts = 0;
   for (const k in logs) totalPts += logs[k].reduce((s, l) => s + l.points, 0);
-  document.getElementById('totalPts').textContent = totalPts;
+  document.getElementById('s_total').textContent = totalPts;
 
-  // Streak
   let streak = 0;
   const d = new Date();
-  while (true) {
-    const k = getDateKey(d);
-    if (logs[k] && logs[k].length > 0) { streak++; d.setDate(d.getDate()-1); }
-    else break;
-  }
-  document.getElementById('streakDays').textContent = streak;
+  while (logs[getDateKey(d)] && logs[getDateKey(d)].length > 0) { streak++; d.setDate(d.getDate()-1); }
+  document.getElementById('s_streak').textContent = streak;
 
   // Level
-  updateLevel(totalPts);
-}
-
-function updateLevel(pts) {
-  let currentLevel = LEVELS[0];
-  let nextLevel = LEVELS[1];
+  let cur = LEVELS[0], nxt = LEVELS[1];
   for (let i = LEVELS.length - 1; i >= 0; i--) {
-    if (pts >= LEVELS[i].minPts) {
-      currentLevel = LEVELS[i];
-      nextLevel = LEVELS[i + 1] || null;
-      break;
-    }
+    if (totalPts >= LEVELS[i].min) { cur = LEVELS[i]; nxt = LEVELS[i+1] || null; break; }
   }
-
-  document.getElementById('levelBadge').textContent = currentLevel.emoji;
-  document.getElementById('levelName').textContent = currentLevel.name;
-  document.getElementById('levelDesc').textContent = currentLevel.desc;
-
-  if (nextLevel) {
-    const range = nextLevel.minPts - currentLevel.minPts;
-    const progress = pts - currentLevel.minPts;
-    const pct = Math.min(100, (progress / range) * 100);
+  document.getElementById('lvBadge').textContent = cur.emoji;
+  document.getElementById('lvName').textContent = cur.name;
+  if (nxt) {
+    const pct = Math.min(100, ((totalPts - cur.min) / (nxt.min - cur.min)) * 100);
     document.getElementById('xpBar').style.width = pct + '%';
-    document.getElementById('xpCurrent').textContent = `${progress} / ${range}`;
-    document.getElementById('xpNext').textContent = `下一级：${nextLevel.name}`;
+    document.getElementById('lvNext').textContent = `${totalPts - cur.min}/${nxt.min - cur.min} → ${nxt.name}`;
   } else {
     document.getElementById('xpBar').style.width = '100%';
-    document.getElementById('xpCurrent').textContent = '已满级！';
-    document.getElementById('xpNext').textContent = '🎉 最强王者';
+    document.getElementById('lvNext').textContent = '🎉 已满级！';
   }
 }
-
-// ===== Calendar =====
-function changeMonth(delta) {
-  calMonth += delta;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  if (calMonth < 0) { calMonth = 11; calYear--; }
-  renderCalendar();
-}
-
-function renderCalendar() {
-  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  document.getElementById('calendarTitle').textContent = `${calYear}年 ${monthNames[calMonth]}`;
-
-  const grid = document.getElementById('calendarGrid');
-  const dayLabels = ['一','二','三','四','五','六','日'];
-  let html = dayLabels.map(d => `<div class="calendar-day-label">${d}</div>`).join('');
-
-  const firstDay = new Date(calYear, calMonth, 1);
-  let startDay = firstDay.getDay() - 1;
-  if (startDay < 0) startDay = 6;
-
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const today = new Date();
-  const todayStr = getDateKey(today);
-
-  for (let i = 0; i < startDay; i++) html += '<div class="calendar-day empty"></div>';
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const dayLogs = logs[key] || [];
-    const pts = dayLogs.reduce((s, l) => s + l.points, 0);
-    const isToday = key === todayStr;
-
-    let ptsClass = '';
-    if (pts > 0 && pts < 15) ptsClass = 'pts-low';
-    else if (pts >= 15 && pts < 30) ptsClass = 'pts-mid';
-    else if (pts >= 30 && pts < 50) ptsClass = 'pts-high';
-    else if (pts >= 50) ptsClass = 'pts-super';
-
-    html += `<div class="calendar-day ${ptsClass} ${isToday ? 'today' : ''}" onclick="showDayDetail('${key}', ${d})">
-      <span class="day-num">${d}</span>
-      ${pts > 0 ? `<span class="day-pts">+${pts}</span>` : ''}
-    </div>`;
-  }
-
-  grid.innerHTML = html;
-}
-
-function showDayDetail(key, day) {
-  const dayLogs = logs[key] || [];
-  const modal = document.getElementById('dayModal');
-  document.getElementById('modalTitle').textContent = `${key} 的记录`;
-
-  if (dayLogs.length === 0) {
-    document.getElementById('modalContent').innerHTML = '<div class="log-empty">这天还没有记录</div>';
-  } else {
-    const total = dayLogs.reduce((s, l) => s + l.points, 0);
-    let html = dayLogs.map(l => `
-      <div class="log-item">
-        <div class="log-left">
-          <span class="log-emoji">${l.emoji}</span>
-          <span class="log-name">${l.name}</span>
-          <span class="log-time">${l.time}</span>
-        </div>
-        <span class="log-pts">+${l.points}</span>
-      </div>
-    `).join('');
-    html += `<div style="text-align:center;margin-top:16px;font-weight:700;color:var(--accent-orange);font-size:1.1em">总计 +${total} 分</div>`;
-    document.getElementById('modalContent').innerHTML = html;
-  }
-
-  modal.classList.add('show');
-}
-
-function closeModal() {
-  document.getElementById('dayModal').classList.remove('show');
-}
-
-document.getElementById('dayModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
 
 // ===== Log =====
-function renderLog(dateKey) {
-  viewingDate = dateKey;
+function renderLog() {
+  const key = todayKey();
   const list = document.getElementById('logList');
-  const dayLogs = logs[dateKey] || [];
-  const isToday = dateKey === todayKey();
-
-  document.getElementById('logTitle').textContent = isToday ? '今日记录' : `${dateKey} 的记录`;
-
+  const dayLogs = logs[key] || [];
   if (dayLogs.length === 0) {
     list.innerHTML = '<div class="log-empty">还没有记录哦，快去完成任务吧！💪</div>';
     return;
   }
-
   list.innerHTML = dayLogs.map((l, i) => `
     <div class="log-item">
       <div class="log-left">
         <span class="log-emoji">${l.emoji}</span>
-        <div>
-          <div class="log-name">${l.name}</div>
-          <div class="log-time">${l.time}</div>
-        </div>
+        <div><div class="log-name">${l.name}</div><div class="log-time">${l.time}</div></div>
       </div>
-      <div>
-        <span class="log-pts">+${l.points}</span>
-        <button class="log-delete" onclick="deleteLog('${dateKey}', ${i})">✕</button>
-      </div>
+      <span class="log-pts">+${l.points}</span>
     </div>
   `).join('');
 }
 
-function deleteLog(dateKey, index) {
-  if (!logs[dateKey]) return;
-  logs[dateKey].splice(index, 1);
-  if (logs[dateKey].length === 0) delete logs[dateKey];
-  saveData();
-  updateStats();
-  renderLog(dateKey);
+// ===== Calendar =====
+function changeMonth(d) {
+  calMonth += d;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
   renderCalendar();
+  document.getElementById('calDayCard').style.display = 'none';
 }
+
+function renderCalendar() {
+  const mNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('calTitle').textContent = `${calYear}年 ${mNames[calMonth]}`;
+
+  const grid = document.getElementById('calGrid');
+  const labels = ['一','二','三','四','五','六','日'];
+  let html = labels.map(d => `<div class="cal-label">${d}</div>`).join('');
+
+  let startDay = new Date(calYear, calMonth, 1).getDay() - 1;
+  if (startDay < 0) startDay = 6;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const todayStr = todayKey();
+
+  for (let i = 0; i < startDay; i++) html += '<div class="cal-day empty"></div>';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const pts = (logs[key] || []).reduce((s, l) => s + l.points, 0);
+    let cls = '';
+    if (pts > 0 && pts < 15) cls = 'pts-low';
+    else if (pts >= 15 && pts < 30) cls = 'pts-mid';
+    else if (pts >= 30 && pts < 50) cls = 'pts-high';
+    else if (pts >= 50) cls = 'pts-super';
+    const isToday = key === todayStr;
+
+    html += `<div class="cal-day ${cls} ${isToday ? 'today' : ''}" onclick="showCalDay('${key}')">
+      <span class="day-num">${d}</span>
+      ${pts > 0 ? `<span class="day-pts">+${pts}</span>` : ''}
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function showCalDay(key) {
+  const dayLogs = logs[key] || [];
+  const card = document.getElementById('calDayCard');
+  card.style.display = 'block';
+  document.getElementById('calDayTitle').textContent = key;
+  const container = document.getElementById('calDayLog');
+
+  if (dayLogs.length === 0) {
+    container.innerHTML = '<div class="log-empty">这天还没有记录</div>';
+  } else {
+    const total = dayLogs.reduce((s, l) => s + l.points, 0);
+    container.innerHTML = dayLogs.map(l => `
+      <div class="log-item">
+        <div class="log-left">
+          <span class="log-emoji">${l.emoji}</span>
+          <div><div class="log-name">${l.name}</div><div class="log-time">${l.time}</div></div>
+        </div>
+        <span class="log-pts">+${l.points}</span>
+      </div>
+    `).join('') + `<div style="text-align:center;margin-top:12px;font-weight:700;color:var(--accent-orange)">总计 +${total} 分</div>`;
+  }
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ===== Data =====
+function renderData() {
+  let totalPts = 0, totalTasks = 0, activeDays = 0;
+  for (const k in logs) {
+    if (logs[k].length > 0) { activeDays++; totalTasks += logs[k].length; }
+    totalPts += logs[k].reduce((s, l) => s + l.points, 0);
+  }
+  document.getElementById('d_total').textContent = totalPts;
+  document.getElementById('d_days').textContent = activeDays;
+  document.getElementById('d_tasks').textContent = totalTasks;
+  document.getElementById('d_avg').textContent = activeDays > 0 ? Math.round(totalPts / activeDays) : 0;
+
+  // Weekly chart
+  const weekDays = ['日','一','二','三','四','五','六'];
+  const chart = document.getElementById('weekChart');
+  let weekData = [];
+  let maxPts = 1;
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const k = getDateKey(d);
+    const pts = (logs[k] || []).reduce((s, l) => s + l.points, 0);
+    weekData.push({ label: `周${weekDays[d.getDay()]}`, pts, date: k });
+    if (pts > maxPts) maxPts = pts;
+  }
+
+  const colors = [
+    'linear-gradient(90deg, var(--accent-blue), var(--accent-green))',
+    'linear-gradient(90deg, var(--accent-orange), var(--accent-pink))',
+    'linear-gradient(90deg, var(--accent-purple), var(--accent-blue))',
+  ];
+
+  chart.innerHTML = weekData.map((d, i) => {
+    const w = Math.max(2, (d.pts / maxPts) * 100);
+    return `<div class="bar-row">
+      <div class="bar-label">${d.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${colors[i % 3]}"></div></div>
+      <div class="bar-val" style="color:var(--accent-orange)">${d.pts}</div>
+    </div>`;
+  }).join('');
+
+  // Top tasks
+  const taskMap = {};
+  for (const k in logs) {
+    for (const l of logs[k]) {
+      if (!taskMap[l.name]) taskMap[l.name] = { emoji: l.emoji, name: l.name, count: 0, pts: 0 };
+      taskMap[l.name].count++;
+      taskMap[l.name].pts += l.points;
+    }
+  }
+
+  const sorted = Object.values(taskMap).sort((a, b) => b.pts - a.pts);
+  const rankEmoji = ['🥇','🥈','🥉'];
+  const topEl = document.getElementById('topTasks');
+
+  if (sorted.length === 0) {
+    topEl.innerHTML = '<div class="log-empty">还没有数据</div>';
+  } else {
+    topEl.innerHTML = sorted.slice(0, 8).map((t, i) => `
+      <div class="top-task-item">
+        <div class="tt-left">
+          <span class="tt-rank">${rankEmoji[i] || (i+1)}</span>
+          <div><div class="tt-name">${t.emoji} ${t.name}</div><div class="tt-count">完成 ${t.count} 次</div></div>
+        </div>
+        <span class="tt-pts">+${t.pts}</span>
+      </div>
+    `).join('');
+  }
+}
+
+// ===== Settings =====
+function renderTaskSettings() {
+  document.getElementById('taskListSettings').innerHTML = tasks.map(t => `
+    <div class="task-list-item">
+      <div class="tl-left">
+        <span class="tl-emoji">${t.emoji}</span>
+        <div><div class="tl-name">${t.name}</div><div class="tl-pts">+${t.points}分</div></div>
+      </div>
+      <button class="tl-del" onclick="removeTask(${t.id})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveData();
+  renderTasks();
+  renderTaskSettings();
+}
+
+function addTask() {
+  const name = document.getElementById('newTaskName').value.trim();
+  const pts = parseInt(document.getElementById('newTaskPoints').value);
+  if (!name || !pts || pts < 1) return;
+  const maxId = tasks.reduce((m, t) => Math.max(m, t.id), 0);
+  tasks.push({ id: maxId + 1, emoji: selectedEmoji, name, points: pts });
+  saveData();
+  renderTasks();
+  renderTaskSettings();
+  document.getElementById('newTaskName').value = '';
+  document.getElementById('newTaskPoints').value = '';
+}
+
+function setupEmojiPicker() {
+  document.getElementById('emojiPicker').innerHTML = EMOJIS.map(e =>
+    `<div class="emoji-opt ${e === selectedEmoji ? 'selected' : ''}" onclick="pickEmoji('${e}',this)">${e}</div>`
+  ).join('');
+}
+
+function pickEmoji(emoji, el) {
+  selectedEmoji = emoji;
+  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function exportData() {
+  const data = JSON.stringify({ tasks, logs }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `积分乐园_${todayKey()}.json`;
+  a.click();
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.tasks) tasks = data.tasks;
+      if (data.logs) logs = { ...logs, ...data.logs };
+      saveData();
+      renderAll();
+      alert('导入成功！');
+    } catch { alert('文件格式错误'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAllData() {
+  if (confirm('确定要清除所有数据吗？此操作不可恢复！')) {
+    logs = {};
+    saveData();
+    renderAll();
+  }
+}
+
+function closeModal() { document.getElementById('dayModal').classList.remove('show'); }
+document.getElementById('dayModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
 // ===== Effects =====
 function showPointsPopup(event, pts) {
   const popup = document.createElement('div');
   popup.className = 'points-popup';
   popup.textContent = `+${pts} ⭐`;
-  popup.style.left = event.clientX + 'px';
-  popup.style.top = event.clientY + 'px';
+  const touch = event.touches ? event.touches[0] : event;
+  popup.style.left = (touch.clientX || touch.pageX) + 'px';
+  popup.style.top = (touch.clientY || touch.pageY) + 'px';
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 1200);
 }
 
 function spawnConfetti() {
-  const container = document.getElementById('confetti');
+  const c = document.getElementById('confetti');
   const colors = ['#ff8906','#e53170','#2cb1ff','#0eca5c','#a855f7','#ffd700'];
-  for (let i = 0; i < 30; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.left = Math.random() * 100 + 'vw';
-    piece.style.top = '-10px';
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-    piece.style.width = (Math.random() * 8 + 5) + 'px';
-    piece.style.height = (Math.random() * 8 + 5) + 'px';
-    piece.style.animationDuration = (Math.random() * 1 + 1) + 's';
-    piece.style.animationDelay = (Math.random() * 0.3) + 's';
-    container.appendChild(piece);
-    setTimeout(() => piece.remove(), 2000);
-  }
-}
-
-function setupParticles() {
-  const container = document.getElementById('particles');
-  const colors = ['rgba(255,137,6,0.15)','rgba(44,177,255,0.15)','rgba(168,85,247,0.15)','rgba(14,202,92,0.15)'];
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 24; i++) {
     const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.width = p.style.height = (Math.random() * 6 + 3) + 'px';
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.top = '-10px';
     p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    container.appendChild(p);
+    p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    p.style.width = (Math.random() * 8 + 4) + 'px';
+    p.style.height = (Math.random() * 8 + 4) + 'px';
+    p.style.animationDuration = (Math.random() * 1 + 1) + 's';
+    p.style.animationDelay = (Math.random() * 0.3) + 's';
+    c.appendChild(p);
+    setTimeout(() => p.remove(), 2000);
   }
 }
 
-// ===== Start =====
 init();
 </script>
 </body>

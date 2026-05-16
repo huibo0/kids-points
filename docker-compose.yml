@@ -1,0 +1,17 @@
+services:
+  kids-points:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: kids-points
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    volumes:
+      - kids_points_data:/app/data
+    environment:
+      - PORT=3004
+      - DB_PATH=/app/data/kids_points.db
+
+volumes:
+  kids_points_data:
