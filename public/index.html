@@ -53,10 +53,8 @@ body::before {
   66% { transform: translate(-1%,1%); }
 }
 
-/* App container */
 .app { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 16px; }
 
-/* Pages */
 .page { display: none; }
 .page.active { display: block; animation: pageIn 0.3s ease-out; }
 
@@ -87,7 +85,7 @@ body::before {
   align-items: center;
   gap: 3px;
   cursor: pointer;
-  padding: 8px 16px;
+  padding: 8px 12px;
   border-radius: 12px;
   transition: all 0.2s;
   -webkit-tap-highlight-color: transparent;
@@ -95,7 +93,7 @@ body::before {
   border: none;
   color: var(--text-sub);
   font-family: inherit;
-  font-size: 0.65em;
+  font-size: 0.6em;
   font-weight: 500;
 }
 
@@ -103,11 +101,8 @@ body::before {
 .nav-item.active { color: var(--accent-orange); }
 .nav-item.active .nav-icon { transform: scale(1.1); }
 
-/* ===== Header ===== */
-.page-header {
-  text-align: center;
-  padding: 16px 0;
-}
+/* Header */
+.page-header { text-align: center; padding: 16px 0; }
 
 .page-header h1 {
   font-size: 1.6em;
@@ -120,7 +115,7 @@ body::before {
 
 .page-header .subtitle { color: var(--text-sub); font-size: 0.8em; margin-top: 4px; }
 
-/* ===== Stats row ===== */
+/* Stats row */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -144,7 +139,7 @@ body::before {
 .mini-stat:nth-child(3) .ms-val { color: var(--accent-pink); }
 .mini-stat:nth-child(4) .ms-val { color: var(--accent-green); }
 
-/* ===== Level bar ===== */
+/* Level bar */
 .level-bar {
   background: var(--bg-card);
   border: 1px solid rgba(255,255,255,0.06);
@@ -200,7 +195,7 @@ body::before {
   50% { background-position: 100% 50%; }
 }
 
-/* ===== Section title ===== */
+/* Section title */
 .sec-title {
   font-size: 1em;
   font-weight: 600;
@@ -212,7 +207,7 @@ body::before {
 
 .sec-title span { font-size: 1.2em; }
 
-/* ===== Task grid ===== */
+/* Task grid */
 .task-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -247,6 +242,17 @@ body::before {
   font-weight: 600;
 }
 
+.task-btn.done {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.task-btn.done::after {
+  content: '✅';
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 1em;
+}
+
 .task-btn.earned { animation: earnBounce 0.5s cubic-bezier(0.34,1.56,0.64,1); }
 
 @keyframes earnBounce {
@@ -256,7 +262,7 @@ body::before {
   100% { transform: scale(1); }
 }
 
-/* ===== Today log ===== */
+/* Card */
 .card {
   background: var(--bg-card);
   border: 1px solid rgba(255,255,255,0.06);
@@ -288,9 +294,92 @@ body::before {
 .log-item .log-emoji { font-size: 1.2em; }
 .log-item .log-name { font-weight: 500; font-size: 0.85em; }
 .log-item .log-time { color: var(--text-sub); font-size: 0.7em; }
-.log-item .log-pts { font-weight: 700; color: var(--accent-orange); font-size: 0.9em; }
+.log-item .log-pts { font-weight: 700; color: var(--accent-orange); font-size: 0.9em; white-space: nowrap; }
+.log-item .log-del {
+  background: rgba(229,49,112,0.15);
+  border: none;
+  color: var(--accent-pink);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
 
 .log-empty { text-align: center; color: var(--text-sub); padding: 24px; font-size: 0.85em; }
+
+/* ===== Shop page ===== */
+.balance-card {
+  background: linear-gradient(135deg, rgba(255,137,6,0.15), rgba(168,85,247,0.15));
+  border: 1px solid rgba(255,137,6,0.2);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.balance-card .bc-label { font-size: 0.8em; color: var(--text-sub); margin-bottom: 4px; }
+.balance-card .bc-val { font-size: 2.5em; font-weight: 700; color: var(--accent-yellow); }
+.balance-card .bc-sub { font-size: 0.75em; color: var(--text-sub); margin-top: 4px; }
+
+.reward-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.reward-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.reward-card .rc-emoji { font-size: 2em; margin-bottom: 8px; }
+.reward-card .rc-name { font-size: 0.85em; font-weight: 500; margin-bottom: 6px; }
+.reward-card .rc-cost { font-size: 0.75em; color: var(--accent-yellow); margin-bottom: 10px; }
+
+.btn-redeem {
+  background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink));
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  color: white;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.75em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s;
+}
+
+.btn-redeem:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-redeem:active:not(:disabled) { transform: scale(0.95); }
+
+.redemption-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.redemption-item .ri-left { display: flex; align-items: center; gap: 10px; }
+.redemption-item .ri-emoji { font-size: 1.2em; }
+.redemption-item .ri-name { font-weight: 500; font-size: 0.85em; }
+.redemption-item .ri-date { color: var(--text-sub); font-size: 0.7em; }
+.redemption-item .ri-cost { font-weight: 700; color: var(--accent-pink); font-size: 0.9em; }
 
 /* ===== Calendar ===== */
 .calendar-nav {
@@ -311,7 +400,6 @@ body::before {
   cursor: pointer;
   font-size: 1em;
   font-family: inherit;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .calendar-grid {
@@ -320,13 +408,7 @@ body::before {
   gap: 4px;
 }
 
-.cal-label {
-  text-align: center;
-  font-size: 0.7em;
-  color: var(--text-sub);
-  padding: 4px 0;
-  font-weight: 600;
-}
+.cal-label { text-align: center; font-size: 0.7em; color: var(--text-sub); padding: 4px 0; font-weight: 600; }
 
 .cal-day {
   aspect-ratio: 1;
@@ -340,7 +422,6 @@ body::before {
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .cal-day.empty { cursor: default; background: transparent; }
@@ -365,43 +446,16 @@ body::before {
   margin-bottom: 14px;
 }
 
-.data-card h3 {
-  font-size: 0.9em;
-  font-weight: 600;
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.data-card h3 { font-size: 0.9em; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 
 .bar-chart { display: flex; flex-direction: column; gap: 8px; }
 
-.bar-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+.bar-row { display: flex; align-items: center; gap: 10px; }
 .bar-label { width: 50px; font-size: 0.75em; color: var(--text-sub); text-align: right; flex-shrink: 0; }
-
-.bar-track {
-  flex: 1;
-  height: 20px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.bar-fill {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.6s ease-out;
-  min-width: 2px;
-}
-
+.bar-track { flex: 1; height: 20px; background: rgba(255,255,255,0.04); border-radius: 10px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 10px; transition: width 0.6s ease-out; min-width: 2px; }
 .bar-val { width: 40px; font-size: 0.75em; font-weight: 600; }
 
-/* Top tasks */
 .top-task-item {
   display: flex;
   align-items: center;
@@ -417,13 +471,7 @@ body::before {
 .top-task-item .tt-count { font-size: 0.7em; color: var(--text-sub); }
 .top-task-item .tt-pts { font-weight: 700; color: var(--accent-orange); font-size: 0.9em; }
 
-/* Big number */
-.big-nums {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
-}
+.big-nums { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 
 .big-num {
   background: var(--bg-card);
@@ -445,27 +493,8 @@ body::before {
   overflow: hidden;
 }
 
-.setting-group-title {
-  font-size: 0.85em;
-  font-weight: 600;
-  padding: 14px 16px 10px;
-  color: var(--text-sub);
-}
+.setting-group-title { font-size: 0.85em; font-weight: 600; padding: 14px 16px 10px; color: var(--text-sub); }
 
-.setting-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
-
-.setting-item .si-left { display: flex; align-items: center; gap: 12px; }
-.setting-item .si-icon { font-size: 1.3em; }
-.setting-item .si-name { font-size: 0.85em; font-weight: 500; }
-.setting-item .si-desc { font-size: 0.7em; color: var(--text-sub); margin-top: 2px; }
-
-/* Task list in settings */
 .task-list-item {
   display: flex;
   align-items: center;
@@ -487,19 +516,11 @@ body::before {
   border-radius: 50%;
   cursor: pointer;
   font-size: 1em;
-  font-family: inherit;
-  -webkit-tap-highlight-color: transparent;
 }
 
-/* Add task form in settings */
 .add-form { padding: 16px; }
 
-.emoji-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
+.emoji-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 
 .emoji-opt {
   width: 34px; height: 34px;
@@ -515,11 +536,7 @@ body::before {
 
 .emoji-opt.selected { border-color: var(--accent-purple); background: rgba(168,85,247,0.15); }
 
-.form-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
+.form-row { display: flex; gap: 8px; margin-bottom: 10px; }
 
 .form-input {
   flex: 1;
@@ -545,7 +562,6 @@ body::before {
   font-weight: 600;
   font-size: 0.85em;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   width: 100%;
 }
 
@@ -559,10 +575,32 @@ body::before {
   font-weight: 600;
   font-size: 0.85em;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   width: 100%;
   margin-top: 8px;
 }
+
+/* PIN input */
+.pin-input-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.pin-digit {
+  width: 48px; height: 56px;
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 1.4em;
+  font-weight: 700;
+  text-align: center;
+  caret-color: var(--accent-purple);
+}
+
+.pin-digit:focus { outline: none; border-color: var(--accent-purple); }
 
 /* Modal */
 .modal-overlay {
@@ -586,7 +624,7 @@ body::before {
   padding: 24px;
   max-width: 380px;
   width: 90%;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
   animation: modalIn 0.3s ease-out;
 }
@@ -596,7 +634,7 @@ body::before {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.modal h3 { margin-bottom: 14px; font-size: 1.1em; }
+.modal h3 { margin-bottom: 14px; font-size: 1.1em; text-align: center; }
 
 .modal-close {
   float: right;
@@ -607,7 +645,54 @@ body::before {
   border-radius: 50%;
   cursor: pointer;
   font-size: 1em;
+}
+
+/* Confirm dialog */
+.confirm-body { text-align: center; padding: 8px 0; }
+.confirm-body .cb-emoji { font-size: 2.5em; margin-bottom: 8px; }
+.confirm-body .cb-text { font-size: 0.95em; margin-bottom: 6px; }
+.confirm-body .cb-sub { font-size: 0.8em; color: var(--text-sub); }
+
+.confirm-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.confirm-btns button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
   font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-cancel {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-sub);
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, var(--accent-orange), var(--accent-pink));
+  color: white;
+}
+
+/* Parent mode indicator */
+.parent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(14,202,92,0.15);
+  border: 1px solid rgba(14,202,92,0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.7em;
+  color: var(--accent-green);
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* Confetti */
@@ -643,6 +728,32 @@ body::before {
 /* Streak fire */
 .streak-fire { display: inline-block; animation: fireWiggle 0.5s ease-in-out infinite alternate; }
 @keyframes fireWiggle { from { transform: rotate(-3deg); } to { transform: rotate(3deg) scale(1.05); } }
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 0.85em;
+  font-weight: 500;
+  z-index: 200;
+  animation: toastIn 0.3s ease-out;
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast.success { border-color: rgba(14,202,92,0.4); color: var(--accent-green); }
+.toast.error { border-color: rgba(229,49,112,0.4); color: var(--accent-pink); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -657,7 +768,6 @@ body::before {
       <div class="subtitle">每一份努力都值得被记录！</div>
     </div>
 
-    <!-- Quick stats -->
     <div class="stats-row">
       <div class="mini-stat">
         <div class="ms-icon">🏆</div>
@@ -670,9 +780,9 @@ body::before {
         <div class="ms-label">本周</div>
       </div>
       <div class="mini-stat">
-        <div class="ms-icon">🌟</div>
-        <div class="ms-val" id="s_total">0</div>
-        <div class="ms-label">总计</div>
+        <div class="ms-icon">💰</div>
+        <div class="ms-val" id="s_balance">0</div>
+        <div class="ms-label">余额</div>
       </div>
       <div class="mini-stat">
         <div class="ms-icon"><span class="streak-fire">🔥</span></div>
@@ -681,7 +791,6 @@ body::before {
       </div>
     </div>
 
-    <!-- Level -->
     <div class="level-bar">
       <div class="lb-badge" id="lvBadge">🌱</div>
       <div class="lb-info">
@@ -695,15 +804,37 @@ body::before {
       </div>
     </div>
 
-    <!-- Tasks -->
     <div class="sec-title"><span>🎯</span> 点击打卡</div>
     <div class="task-grid" id="taskGrid"></div>
 
-    <!-- Today log -->
     <div class="card">
-      <div class="sec-title"><span>📝</span> 今日记录</div>
+      <div class="sec-title" style="justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px"><span>📝</span> 今日记录</div>
+        <span id="parentBadgeHome"></span>
+      </div>
       <div class="log-list" id="logList">
         <div class="log-empty">还没有记录哦，快去完成任务吧！💪</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SHOP PAGE ========== -->
+  <div class="page" id="page-shop">
+    <div class="page-header"><h1>🎪 积分商城</h1></div>
+
+    <div class="balance-card">
+      <div class="bc-label">可用积分</div>
+      <div class="bc-val" id="shopBalance">0</div>
+      <div class="bc-sub">累计获得 <span id="shopEarned">0</span> · 已花费 <span id="shopSpent">0</span></div>
+    </div>
+
+    <div class="sec-title"><span>🎁</span> 可兑换奖品</div>
+    <div class="reward-grid" id="rewardGrid"></div>
+
+    <div class="card">
+      <div class="sec-title"><span>📜</span> 兑换记录</div>
+      <div class="log-list" id="redemptionList">
+        <div class="log-empty">还没有兑换记录哦</div>
       </div>
     </div>
   </div>
@@ -720,9 +851,11 @@ body::before {
       <div class="calendar-grid" id="calGrid"></div>
     </div>
 
-    <!-- Selected day log -->
     <div class="card" id="calDayCard" style="display:none">
-      <div class="sec-title"><span>📋</span> <span id="calDayTitle">选中日期</span></div>
+      <div class="sec-title" style="justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px"><span>📋</span> <span id="calDayTitle">选中日期</span></div>
+        <span id="parentBadgeCal"></span>
+      </div>
       <div class="log-list" id="calDayLog"></div>
     </div>
   </div>
@@ -750,13 +883,11 @@ body::before {
       </div>
     </div>
 
-    <!-- Weekly chart -->
     <div class="data-card">
       <h3>📈 最近7天</h3>
       <div class="bar-chart" id="weekChart"></div>
     </div>
 
-    <!-- Top tasks -->
     <div class="data-card">
       <h3>🏅 任务排行榜</h3>
       <div id="topTasks"></div>
@@ -767,11 +898,17 @@ body::before {
   <div class="page" id="page-settings">
     <div class="page-header"><h1>⚙️ 设置</h1></div>
 
+    <!-- PIN -->
+    <div class="setting-group">
+      <div class="setting-group-title">🔐 家长模式</div>
+      <div style="padding:14px 16px" id="pinSection"></div>
+    </div>
+
     <!-- Task management -->
     <div class="setting-group">
       <div class="setting-group-title">📋 任务管理</div>
       <div id="taskListSettings"></div>
-      <div class="add-form">
+      <div class="add-form" id="addTaskForm" style="display:none">
         <div class="sec-title" style="font-size:0.85em"><span>➕</span> 添加新任务</div>
         <div class="emoji-picker" id="emojiPicker"></div>
         <div class="form-row">
@@ -782,12 +919,27 @@ body::before {
       </div>
     </div>
 
+    <!-- Reward management -->
+    <div class="setting-group">
+      <div class="setting-group-title">🎁 奖品管理</div>
+      <div id="rewardListSettings"></div>
+      <div class="add-form" id="addRewardForm" style="display:none">
+        <div class="sec-title" style="font-size:0.85em"><span>➕</span> 添加新奖品</div>
+        <div class="emoji-picker" id="rewardEmojiPicker"></div>
+        <div class="form-row">
+          <input class="form-input" type="text" id="newRewardName" placeholder="奖品名称" maxlength="20">
+          <input class="form-input" type="number" id="newRewardCost" placeholder="积分" min="1" max="9999" style="max-width:80px">
+        </div>
+        <button class="btn-primary" onclick="addReward()">添加奖品</button>
+      </div>
+    </div>
+
     <!-- Data management -->
     <div class="setting-group">
       <div class="setting-group-title">🗄️ 数据管理</div>
       <div style="padding:14px 16px">
         <button class="btn-primary" onclick="exportData()" style="margin-bottom:8px">📤 导出数据</button>
-        <button class="btn-primary" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
+        <button class="btn-primary" onclick="document.getElementById('importFile').click()" style="margin-bottom:8px">📥 导入数据</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
         <button class="btn-danger" onclick="clearAllData()">🗑️ 清除所有数据</button>
       </div>
@@ -798,35 +950,49 @@ body::before {
 <!-- Bottom nav -->
 <div class="bottom-nav">
   <div class="nav-item active" onclick="switchPage('home')">
-    <span class="nav-icon">🏠</span>
-    <span>首页</span>
+    <span class="nav-icon">🏠</span><span>首页</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('shop')">
+    <span class="nav-icon">🎪</span><span>商城</span>
   </div>
   <div class="nav-item" onclick="switchPage('calendar')">
-    <span class="nav-icon">📅</span>
-    <span>日历</span>
+    <span class="nav-icon">📅</span><span>日历</span>
   </div>
   <div class="nav-item" onclick="switchPage('data')">
-    <span class="nav-icon">📊</span>
-    <span>数据</span>
+    <span class="nav-icon">📊</span><span>数据</span>
   </div>
   <div class="nav-item" onclick="switchPage('settings')">
-    <span class="nav-icon">⚙️</span>
-    <span>设置</span>
+    <span class="nav-icon">⚙️</span><span>设置</span>
   </div>
 </div>
 
-<!-- Day detail modal -->
-<div class="modal-overlay" id="dayModal">
+<!-- Confirm modal -->
+<div class="modal-overlay" id="confirmModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3 id="modalTitle"></h3>
-    <div id="modalContent"></div>
+    <div id="confirmContent"></div>
+  </div>
+</div>
+
+<!-- PIN modal -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closePinModal()">✕</button>
+    <h3 id="pinModalTitle">输入家长密码</h3>
+    <div class="pin-input-group" id="pinInputGroup">
+      <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-digit" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]">
+    </div>
+    <div id="pinError" style="text-align:center;color:var(--accent-pink);font-size:0.8em;min-height:1.2em"></div>
+    <button class="btn-primary" id="pinSubmitBtn" onclick="submitPin()" style="margin-top:10px">确认</button>
   </div>
 </div>
 
 <script>
-// ===== Data =====
+// ===== State =====
 const API = window.location.origin + '/api';
+const PAGES = ['home','shop','calendar','data','settings'];
 
 const LEVELS = [
   { name: '小萌新', emoji: '🌱', min: 0 },
@@ -839,39 +1005,63 @@ const LEVELS = [
 ];
 
 const EMOJIS = ['📚','📖','🧹','🍳','🏃','🎹','✍️','🧮','🎨','🧪','💻','🌱','🎯','🧩','🔬','🎸','🏊','⚽','🧘','📝','🛏️','🦷','👕','🐕'];
+const REWARD_EMOJIS = ['🎁','🍦','🎮','🎬','🍕','🧸','📱','🎠','🎢','🏖️','🍰','🎈','🎨','⚽','🎪','🎵','📚','🍫','🎲','🌟'];
 
-let tasks = [], logs = {}, calMonth, calYear, selectedEmoji = '📚';
+let tasks = [], logs = {}, rewards = [], redemptions = [], balance = { earned: 0, spent: 0, balance: 0 };
+let calMonth, calYear;
+let selectedEmoji = '📚', selectedRewardEmoji = '🎁';
+let parentPin = null; // stored in session
+let hasPin = false;
+let pinCallback = null;
+let selectedCalDay = null;
 
-// ===== Init =====
-async function init() {
-  await loadData();
-  const now = new Date();
-  calMonth = now.getMonth();
-  calYear = now.getFullYear();
-  renderAll();
-  setupEmojiPicker();
-}
-
+// ===== Helpers =====
 function getDateKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function todayKey() { return getDateKey(new Date()); }
 
-async function loadData() {
+function parentHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (parentPin) h['X-Parent-Pin'] = parentPin;
+  return h;
+}
+
+function toast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2500);
+}
+
+// ===== Init =====
+async function init() {
+  const now = new Date();
+  calMonth = now.getMonth();
+  calYear = now.getFullYear();
+  await loadAllData();
+  renderAll();
+  setupEmojiPicker();
+  setupPinInputs();
+}
+
+async function loadAllData() {
   try {
-    const [tasksRes, logsRes] = await Promise.all([
-      fetch(API + '/tasks'),
-      fetch(API + '/logs'),
+    const [tasksRes, logsRes, rewardsRes, redemptionsRes, balanceRes, pinRes] = await Promise.all([
+      fetch(API + '/tasks'), fetch(API + '/logs'),
+      fetch(API + '/rewards'), fetch(API + '/redemptions'),
+      fetch(API + '/balance'), fetch(API + '/has-pin'),
     ]);
     tasks = await tasksRes.json();
     logs = await logsRes.json();
+    rewards = await rewardsRes.json();
+    redemptions = await redemptionsRes.json();
+    balance = await balanceRes.json();
+    const pinData = await pinRes.json();
+    hasPin = pinData.hasPin;
   } catch (e) {
-    console.error('Failed to load data from server:', e);
-    // Fallback to localStorage
-    const s1 = localStorage.getItem('kp_tasks');
-    tasks = s1 ? JSON.parse(s1) : [];
-    const s2 = localStorage.getItem('kp_logs');
-    logs = s2 ? JSON.parse(s2) : {};
+    console.error('Failed to load data:', e);
   }
 }
 
@@ -880,7 +1070,8 @@ function renderAll() {
   renderLog();
   renderCalendar();
   renderData();
-  renderTaskSettings();
+  renderSettings();
+  renderShop();
   updateStats();
 }
 
@@ -889,52 +1080,279 @@ function switchPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item')[['home','calendar','data','settings'].indexOf(name)].classList.add('active');
+  document.querySelectorAll('.nav-item')[PAGES.indexOf(name)].classList.add('active');
   if (name === 'data') renderData();
   if (name === 'calendar') renderCalendar();
-  if (name === 'settings') renderTaskSettings();
+  if (name === 'settings') renderSettings();
+  if (name === 'shop') renderShop();
   window.scrollTo(0, 0);
+}
+
+// ===== PIN System =====
+function setupPinInputs() {
+  const inputs = document.querySelectorAll('#pinInputGroup .pin-digit');
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+      if (inp.value && i < 3) inputs[i + 1].focus();
+    });
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i - 1].focus();
+      if (e.key === 'Enter') submitPin();
+    });
+  });
+}
+
+function getPinValue() {
+  return Array.from(document.querySelectorAll('#pinInputGroup .pin-digit')).map(i => i.value).join('');
+}
+
+function clearPinInputs() {
+  document.querySelectorAll('#pinInputGroup .pin-digit').forEach(i => { i.value = ''; });
+  document.getElementById('pinError').textContent = '';
+}
+
+function showPinModal(title, callback) {
+  pinCallback = callback;
+  document.getElementById('pinModalTitle').textContent = title;
+  clearPinInputs();
+  document.getElementById('pinModal').classList.add('show');
+  setTimeout(() => document.querySelector('#pinInputGroup .pin-digit').focus(), 100);
+}
+
+function closePinModal() {
+  document.getElementById('pinModal').classList.remove('show');
+  pinCallback = null;
+}
+
+async function submitPin() {
+  const pin = getPinValue();
+  if (pin.length !== 4) {
+    document.getElementById('pinError').textContent = '请输入4位数字密码';
+    return;
+  }
+  if (pinCallback) {
+    await pinCallback(pin);
+  }
+}
+
+function requireParentAction(action) {
+  if (parentPin) {
+    action();
+    return;
+  }
+  if (!hasPin) {
+    toast('请先在设置中设置家长密码', 'error');
+    return;
+  }
+  showPinModal('输入家长密码', async (pin) => {
+    try {
+      const res = await fetch(API + '/verify-pin', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        parentPin = pin;
+        closePinModal();
+        toast('家长模式已开启 🔓');
+        renderParentBadges();
+        renderSettings();
+        action();
+      } else {
+        document.getElementById('pinError').textContent = '密码错误，请重试';
+        clearPinInputs();
+      }
+    } catch (e) {
+      document.getElementById('pinError').textContent = '验证失败';
+    }
+  });
+}
+
+function exitParentMode() {
+  parentPin = null;
+  toast('已退出家长模式 🔒');
+  renderParentBadges();
+  renderSettings();
+  renderLog();
+}
+
+function renderParentBadges() {
+  const badge = parentPin
+    ? '<span class="parent-badge" onclick="exitParentMode()">🔓 家长模式 ✕</span>'
+    : '';
+  document.getElementById('parentBadgeHome').innerHTML = badge;
+  document.getElementById('parentBadgeCal').innerHTML = badge;
+}
+
+// ===== PIN Settings =====
+function renderPinSection() {
+  const el = document.getElementById('pinSection');
+  if (!hasPin) {
+    el.innerHTML = `
+      <p style="font-size:0.85em;color:var(--text-sub);margin-bottom:12px">设置4位数字密码，用于保护敏感操作（删除记录、管理奖品等）</p>
+      <div class="form-row">
+        <input class="form-input" type="tel" id="setupPin1" placeholder="输入4位密码" maxlength="4" inputmode="numeric">
+        <input class="form-input" type="tel" id="setupPin2" placeholder="确认密码" maxlength="4" inputmode="numeric">
+      </div>
+      <button class="btn-primary" onclick="setupPin()">设置密码</button>
+    `;
+  } else if (parentPin) {
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span class="parent-badge">🔓 家长模式已开启</span>
+        <button class="btn-cancel" onclick="exitParentMode()" style="padding:6px 14px;border-radius:8px;font-size:0.8em;border:1px solid rgba(255,255,255,0.1);cursor:pointer;background:rgba(255,255,255,0.06);color:var(--text-sub);font-family:inherit">退出</button>
+      </div>
+      <div class="form-row">
+        <input class="form-input" type="tel" id="changePinInput" placeholder="新的4位密码" maxlength="4" inputmode="numeric">
+      </div>
+      <button class="btn-primary" onclick="changePin()">修改密码</button>
+    `;
+  } else {
+    el.innerHTML = `
+      <p style="font-size:0.85em;color:var(--text-sub);margin-bottom:12px">密码已设置。进入家长模式后可管理任务、奖品和删除记录。</p>
+      <button class="btn-primary" onclick="requireParentAction(() => { renderSettings(); })">🔐 进入家长模式</button>
+    `;
+  }
+}
+
+async function setupPin() {
+  const p1 = document.getElementById('setupPin1').value;
+  const p2 = document.getElementById('setupPin2').value;
+  if (p1.length !== 4 || !/^\d{4}$/.test(p1)) { toast('请输入4位数字密码', 'error'); return; }
+  if (p1 !== p2) { toast('两次密码不一致', 'error'); return; }
+  try {
+    const res = await fetch(API + '/setup-pin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: p1 }),
+    });
+    if (res.ok) {
+      hasPin = true;
+      parentPin = p1;
+      toast('密码设置成功！🔐');
+      renderSettings();
+      renderParentBadges();
+    } else {
+      const d = await res.json();
+      toast(d.error || '设置失败', 'error');
+    }
+  } catch (e) { toast('设置失败', 'error'); }
+}
+
+async function changePin() {
+  const newPin = document.getElementById('changePinInput').value;
+  if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) { toast('请输入4位数字密码', 'error'); return; }
+  try {
+    const res = await fetch(API + '/change-pin', {
+      method: 'POST', headers: parentHeaders(),
+      body: JSON.stringify({ newPin }),
+    });
+    if (res.ok) {
+      parentPin = newPin;
+      toast('密码修改成功！');
+      renderSettings();
+    } else {
+      toast('修改失败', 'error');
+    }
+  } catch (e) { toast('修改失败', 'error'); }
 }
 
 // ===== Tasks =====
 function renderTasks() {
   const todayLogs = logs[todayKey()] || [];
   const doneIds = new Set(todayLogs.map(l => l.taskId));
-  document.getElementById('taskGrid').innerHTML = tasks.filter(t => !doneIds.has(t.id)).map(t => `
-    <div class="task-btn" onclick="earnPoints(${t.id}, event)" data-id="${t.id}">
+  const grid = document.getElementById('taskGrid');
+
+  if (tasks.length === 0) {
+    grid.innerHTML = '<div class="log-empty" style="grid-column:1/-1">还没有任务，去设置页面添加吧！</div>';
+    return;
+  }
+
+  grid.innerHTML = tasks.map(t => {
+    const done = doneIds.has(t.id);
+    return `<div class="task-btn ${done ? 'done' : ''}" onclick="${done ? '' : `confirmEarn(${t.id}, event)`}" data-id="${t.id}">
       <span class="task-emoji">${t.emoji}</span>
       <span class="task-name">${t.name}</span>
       <span class="task-points">+${t.points}分</span>
-    </div>
-  `).join('') || '<div class="log-empty">今天的任务都完成啦！🎉</div>';
+    </div>`;
+  }).join('');
 }
 
-function earnPoints(taskId, event) {
+function confirmEarn(taskId, event) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  const rect = event.currentTarget.getBoundingClientRect();
+  const modal = document.getElementById('confirmModal');
+  document.getElementById('confirmContent').innerHTML = `
+    <div class="confirm-body">
+      <div class="cb-emoji">${task.emoji}</div>
+      <div class="cb-text">确认完成「${task.name}」？</div>
+      <div class="cb-sub">将获得 +${task.points} 积分</div>
+    </div>
+    <div class="confirm-btns">
+      <button class="btn-cancel" onclick="closeConfirmModal()">取消</button>
+      <button class="btn-confirm" onclick="doEarnPoints(${task.id})">确认打卡 ✅</button>
+    </div>
+  `;
+  modal.classList.add('show');
+  // Save event position for popup
+  modal._eventX = rect.left + rect.width / 2;
+  modal._eventY = rect.top;
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+async function doEarnPoints(taskId) {
+  closeConfirmModal();
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
   const key = todayKey();
-  if (!logs[key]) logs[key] = [];
   const now = new Date();
   const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  logs[key].push({ taskId: task.id, emoji: task.emoji, name: task.name, points: task.points, time });
 
-  const btn = event.currentTarget;
-  btn.classList.remove('earned');
-  void btn.offsetWidth;
-  btn.classList.add('earned');
+  try {
+    const res = await fetch(API + '/logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: key, taskId: task.id, emoji: task.emoji, name: task.name, points: task.points, time }),
+    });
 
-  showPointsPopup(event, task.points);
-  spawnConfetti();
-  updateStats();
-  renderLog();
-  renderTasks();
+    if (res.status === 409) {
+      toast('今天已经完成过这个任务了', 'error');
+      return;
+    }
 
-  // Save to server in background (don't block UI)
-  fetch(API + '/logs', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ date: key, taskId: task.id, emoji: task.emoji, name: task.name, points: task.points, time }),
-  }).catch(e => console.error('Failed to save log:', e));
+    if (!res.ok) {
+      const d = await res.json();
+      toast(d.error || '打卡失败', 'error');
+      return;
+    }
+
+    const result = await res.json();
+
+    // Update local state
+    if (!logs[key]) logs[key] = [];
+    logs[key].push({ id: result.id, taskId: task.id, emoji: task.emoji, name: task.name, points: task.points, time });
+
+    // Update balance
+    balance.earned += task.points;
+    balance.balance += task.points;
+
+    // Effects
+    const modal = document.getElementById('confirmModal');
+    showPointsPopup(modal._eventX || window.innerWidth / 2, modal._eventY || 200, task.points);
+    spawnConfetti();
+
+    updateStats();
+    renderLog();
+    renderTasks();
+  } catch (e) {
+    toast('打卡失败', 'error');
+    console.error(e);
+  }
 }
 
 // ===== Stats =====
@@ -952,16 +1370,15 @@ function updateStats() {
   }
   document.getElementById('s_week').textContent = weekPts;
 
-  let totalPts = 0;
-  for (const k in logs) totalPts += logs[k].reduce((s, l) => s + l.points, 0);
-  document.getElementById('s_total').textContent = totalPts;
+  document.getElementById('s_balance').textContent = balance.balance;
 
   let streak = 0;
   const d = new Date();
   while (logs[getDateKey(d)] && logs[getDateKey(d)].length > 0) { streak++; d.setDate(d.getDate()-1); }
   document.getElementById('s_streak').textContent = streak;
 
-  // Level
+  // Level (based on total earned)
+  const totalPts = balance.earned;
   let cur = LEVELS[0], nxt = LEVELS[1];
   for (let i = LEVELS.length - 1; i >= 0; i--) {
     if (totalPts >= LEVELS[i].min) { cur = LEVELS[i]; nxt = LEVELS[i+1] || null; break; }
@@ -976,6 +1393,8 @@ function updateStats() {
     document.getElementById('xpBar').style.width = '100%';
     document.getElementById('lvNext').textContent = '🎉 已满级！';
   }
+
+  renderParentBadges();
 }
 
 // ===== Log =====
@@ -987,15 +1406,153 @@ function renderLog() {
     list.innerHTML = '<div class="log-empty">还没有记录哦，快去完成任务吧！💪</div>';
     return;
   }
-  list.innerHTML = dayLogs.map((l, i) => `
+  list.innerHTML = dayLogs.map(l => `
     <div class="log-item">
       <div class="log-left">
         <span class="log-emoji">${l.emoji}</span>
         <div><div class="log-name">${l.name}</div><div class="log-time">${l.time}</div></div>
       </div>
-      <span class="log-pts">+${l.points}</span>
+      <div style="display:flex;align-items:center">
+        <span class="log-pts">+${l.points}</span>
+        ${parentPin && l.id ? `<button class="log-del" onclick="deleteLog(${l.id},'${key}')">✕</button>` : ''}
+      </div>
     </div>
   `).join('');
+}
+
+async function deleteLog(logId, dateKey) {
+  const modal = document.getElementById('confirmModal');
+  document.getElementById('confirmContent').innerHTML = `
+    <div class="confirm-body">
+      <div class="cb-emoji">🗑️</div>
+      <div class="cb-text">确定删除这条记录？</div>
+      <div class="cb-sub">删除后积分将被扣回</div>
+    </div>
+    <div class="confirm-btns">
+      <button class="btn-cancel" onclick="closeConfirmModal()">取消</button>
+      <button class="btn-confirm" onclick="doDeleteLog(${logId},'${dateKey}')" style="background:linear-gradient(135deg,var(--accent-pink),#c0392b)">确认删除</button>
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+async function doDeleteLog(logId, dateKey) {
+  closeConfirmModal();
+  try {
+    const res = await fetch(API + '/logs/' + logId, {
+      method: 'DELETE', headers: parentHeaders(),
+    });
+    if (res.ok) {
+      // Update local state
+      if (logs[dateKey]) {
+        const entry = logs[dateKey].find(l => l.id === logId);
+        if (entry) {
+          balance.earned -= entry.points;
+          balance.balance -= entry.points;
+        }
+        logs[dateKey] = logs[dateKey].filter(l => l.id !== logId);
+        if (logs[dateKey].length === 0) delete logs[dateKey];
+      }
+      toast('记录已删除');
+      renderLog();
+      renderTasks();
+      updateStats();
+      if (selectedCalDay) showCalDay(selectedCalDay);
+    } else {
+      toast('删除失败', 'error');
+    }
+  } catch (e) { toast('删除失败', 'error'); }
+}
+
+// ===== Shop =====
+async function renderShop() {
+  // Refresh balance
+  try {
+    const res = await fetch(API + '/balance');
+    balance = await res.json();
+  } catch (e) {}
+
+  document.getElementById('shopBalance').textContent = balance.balance;
+  document.getElementById('shopEarned').textContent = balance.earned;
+  document.getElementById('shopSpent').textContent = balance.spent;
+
+  const grid = document.getElementById('rewardGrid');
+  if (rewards.length === 0) {
+    grid.innerHTML = '<div class="log-empty" style="grid-column:1/-1">还没有奖品，让家长在设置中添加吧！🎁</div>';
+  } else {
+    grid.innerHTML = rewards.map(r => {
+      const canAfford = balance.balance >= r.cost;
+      return `<div class="reward-card">
+        <div class="rc-emoji">${r.emoji}</div>
+        <div class="rc-name">${r.name}</div>
+        <div class="rc-cost">⭐ ${r.cost} 积分</div>
+        <button class="btn-redeem" ${canAfford ? '' : 'disabled'} onclick="confirmRedeem(${r.id})">
+          ${canAfford ? '🎉 兑换' : '😢 积分不足'}
+        </button>
+      </div>`;
+    }).join('');
+  }
+
+  // Redemption history
+  const list = document.getElementById('redemptionList');
+  if (redemptions.length === 0) {
+    list.innerHTML = '<div class="log-empty">还没有兑换记录哦</div>';
+  } else {
+    list.innerHTML = redemptions.slice(0, 20).map(r => `
+      <div class="redemption-item">
+        <div class="ri-left">
+          <span class="ri-emoji">${r.emoji}</span>
+          <div><div class="ri-name">${r.name}</div><div class="ri-date">${r.date} ${r.time}</div></div>
+        </div>
+        <span class="ri-cost">-${r.cost}</span>
+      </div>
+    `).join('');
+  }
+}
+
+function confirmRedeem(rewardId) {
+  const reward = rewards.find(r => r.id === rewardId);
+  if (!reward) return;
+  const modal = document.getElementById('confirmModal');
+  document.getElementById('confirmContent').innerHTML = `
+    <div class="confirm-body">
+      <div class="cb-emoji">${reward.emoji}</div>
+      <div class="cb-text">确认兑换「${reward.name}」？</div>
+      <div class="cb-sub">将扣除 ${reward.cost} 积分（当前余额 ${balance.balance}）</div>
+    </div>
+    <div class="confirm-btns">
+      <button class="btn-cancel" onclick="closeConfirmModal()">再想想</button>
+      <button class="btn-confirm" onclick="doRedeem(${reward.id})">确认兑换 🎁</button>
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+async function doRedeem(rewardId) {
+  closeConfirmModal();
+  try {
+    const res = await fetch(API + '/redemptions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rewardId }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      spawnConfetti();
+      toast('兑换成功！🎉');
+      // Reload
+      const [redemRes, balRes] = await Promise.all([
+        fetch(API + '/redemptions'), fetch(API + '/balance'),
+      ]);
+      redemptions = await redemRes.json();
+      balance = await balRes.json();
+      renderShop();
+      updateStats();
+    } else {
+      const d = await res.json();
+      toast(d.error || '兑换失败', 'error');
+    }
+  } catch (e) { toast('兑换失败', 'error'); }
 }
 
 // ===== Calendar =====
@@ -1041,6 +1598,7 @@ function renderCalendar() {
 }
 
 function showCalDay(key) {
+  selectedCalDay = key;
   const dayLogs = logs[key] || [];
   const card = document.getElementById('calDayCard');
   card.style.display = 'block';
@@ -1057,7 +1615,10 @@ function showCalDay(key) {
           <span class="log-emoji">${l.emoji}</span>
           <div><div class="log-name">${l.name}</div><div class="log-time">${l.time}</div></div>
         </div>
-        <span class="log-pts">+${l.points}</span>
+        <div style="display:flex;align-items:center">
+          <span class="log-pts">+${l.points}</span>
+          ${parentPin && l.id ? `<button class="log-del" onclick="deleteLog(${l.id},'${key}')">✕</button>` : ''}
+        </div>
       </div>
     `).join('') + `<div style="text-align:center;margin-top:12px;font-weight:700;color:var(--accent-orange)">总计 +${total} 分</div>`;
   }
@@ -1085,7 +1646,7 @@ function renderData() {
     const d = new Date(); d.setDate(d.getDate() - i);
     const k = getDateKey(d);
     const pts = (logs[k] || []).reduce((s, l) => s + l.points, 0);
-    weekData.push({ label: `周${weekDays[d.getDay()]}`, pts, date: k });
+    weekData.push({ label: `周${weekDays[d.getDay()]}`, pts });
     if (pts > maxPts) maxPts = pts;
   }
 
@@ -1134,6 +1695,16 @@ function renderData() {
 }
 
 // ===== Settings =====
+function renderSettings() {
+  renderPinSection();
+  renderTaskSettings();
+  renderRewardSettings();
+
+  // Show/hide add forms based on parent mode
+  document.getElementById('addTaskForm').style.display = parentPin ? 'block' : 'none';
+  document.getElementById('addRewardForm').style.display = parentPin ? 'block' : 'none';
+}
+
 function renderTaskSettings() {
   document.getElementById('taskListSettings').innerHTML = tasks.map(t => `
     <div class="task-list-item">
@@ -1141,46 +1712,116 @@ function renderTaskSettings() {
         <span class="tl-emoji">${t.emoji}</span>
         <div><div class="tl-name">${t.name}</div><div class="tl-pts">+${t.points}分</div></div>
       </div>
-      <button class="tl-del" onclick="removeTask(${t.id})">✕</button>
+      ${parentPin ? `<button class="tl-del" onclick="removeTask(${t.id})">✕</button>` : ''}
     </div>
-  `).join('');
+  `).join('') || '<div style="padding:16px;text-align:center;color:var(--text-sub);font-size:0.85em">暂无任务</div>';
+}
+
+function renderRewardSettings() {
+  document.getElementById('rewardListSettings').innerHTML = rewards.map(r => `
+    <div class="task-list-item">
+      <div class="tl-left">
+        <span class="tl-emoji">${r.emoji}</span>
+        <div><div class="tl-name">${r.name}</div><div class="tl-pts">⭐ ${r.cost}积分</div></div>
+      </div>
+      ${parentPin ? `<button class="tl-del" onclick="removeReward(${r.id})">✕</button>` : ''}
+    </div>
+  `).join('') || '<div style="padding:16px;text-align:center;color:var(--text-sub);font-size:0.85em">暂无奖品</div>';
 }
 
 async function removeTask(id) {
-  tasks = tasks.filter(t => t.id !== id);
-  try { await fetch(API + '/tasks/' + id, { method: 'DELETE' }); } catch (e) { console.error(e); }
-  renderTasks();
-  renderTaskSettings();
+  try {
+    const res = await fetch(API + '/tasks/' + id, { method: 'DELETE', headers: parentHeaders() });
+    if (res.ok) {
+      tasks = tasks.filter(t => t.id !== id);
+      renderTasks();
+      renderTaskSettings();
+      toast('任务已删除');
+    } else {
+      toast('删除失败', 'error');
+    }
+  } catch (e) { toast('删除失败', 'error'); }
 }
 
 async function addTask() {
   const name = document.getElementById('newTaskName').value.trim();
   const pts = parseInt(document.getElementById('newTaskPoints').value);
-  if (!name || !pts || pts < 1) return;
+  if (!name || !pts || pts < 1) { toast('请填写任务名称和分数', 'error'); return; }
   try {
     const res = await fetch(API + '/tasks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: parentHeaders(),
       body: JSON.stringify({ emoji: selectedEmoji, name, points: pts }),
     });
-    const newTask = await res.json();
-    tasks.push(newTask);
-  } catch (e) { console.error(e); }
-  renderTasks();
-  renderTaskSettings();
-  document.getElementById('newTaskName').value = '';
-  document.getElementById('newTaskPoints').value = '';
+    if (res.ok) {
+      const newTask = await res.json();
+      tasks.push(newTask);
+      renderTasks();
+      renderTaskSettings();
+      document.getElementById('newTaskName').value = '';
+      document.getElementById('newTaskPoints').value = '';
+      toast('任务添加成功！');
+    } else {
+      const d = await res.json();
+      toast(d.error || '添加失败', 'error');
+    }
+  } catch (e) { toast('添加失败', 'error'); }
+}
+
+async function addReward() {
+  const name = document.getElementById('newRewardName').value.trim();
+  const cost = parseInt(document.getElementById('newRewardCost').value);
+  if (!name || !cost || cost < 1) { toast('请填写奖品名称和积分', 'error'); return; }
+  try {
+    const res = await fetch(API + '/rewards', {
+      method: 'POST', headers: parentHeaders(),
+      body: JSON.stringify({ emoji: selectedRewardEmoji, name, cost }),
+    });
+    if (res.ok) {
+      const newReward = await res.json();
+      rewards.push(newReward);
+      renderRewardSettings();
+      renderShop();
+      document.getElementById('newRewardName').value = '';
+      document.getElementById('newRewardCost').value = '';
+      toast('奖品添加成功！');
+    } else {
+      const d = await res.json();
+      toast(d.error || '添加失败', 'error');
+    }
+  } catch (e) { toast('添加失败', 'error'); }
+}
+
+async function removeReward(id) {
+  try {
+    const res = await fetch(API + '/rewards/' + id, { method: 'DELETE', headers: parentHeaders() });
+    if (res.ok) {
+      rewards = rewards.filter(r => r.id !== id);
+      renderRewardSettings();
+      renderShop();
+      toast('奖品已删除');
+    } else {
+      toast('删除失败', 'error');
+    }
+  } catch (e) { toast('删除失败', 'error'); }
 }
 
 function setupEmojiPicker() {
   document.getElementById('emojiPicker').innerHTML = EMOJIS.map(e =>
-    `<div class="emoji-opt ${e === selectedEmoji ? 'selected' : ''}" onclick="pickEmoji('${e}',this)">${e}</div>`
+    `<div class="emoji-opt ${e === selectedEmoji ? 'selected' : ''}" onclick="pickEmoji('${e}',this,'task')">${e}</div>`
+  ).join('');
+  document.getElementById('rewardEmojiPicker').innerHTML = REWARD_EMOJIS.map(e =>
+    `<div class="emoji-opt ${e === selectedRewardEmoji ? 'selected' : ''}" onclick="pickEmoji('${e}',this,'reward')">${e}</div>`
   ).join('');
 }
 
-function pickEmoji(emoji, el) {
-  selectedEmoji = emoji;
-  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+function pickEmoji(emoji, el, type) {
+  if (type === 'reward') {
+    selectedRewardEmoji = emoji;
+    document.querySelectorAll('#rewardEmojiPicker .emoji-opt').forEach(e => e.classList.remove('selected'));
+  } else {
+    selectedEmoji = emoji;
+    document.querySelectorAll('#emojiPicker .emoji-opt').forEach(e => e.classList.remove('selected'));
+  }
   el.classList.add('selected');
 }
 
@@ -1193,49 +1834,68 @@ async function exportData() {
     a.href = URL.createObjectURL(blob);
     a.download = `积分乐园_${todayKey()}.json`;
     a.click();
-  } catch (e) { console.error(e); alert('导出失败'); }
+    toast('导出成功！');
+  } catch (e) { toast('导出失败', 'error'); }
 }
 
 function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      await fetch(API + '/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      await loadData();
-      renderAll();
-      alert('导入成功！');
-    } catch { alert('文件格式错误'); }
-  };
-  reader.readAsText(file);
+  requireParentAction(() => {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        await fetch(API + '/import', {
+          method: 'POST', headers: parentHeaders(),
+          body: JSON.stringify(data),
+        });
+        await loadAllData();
+        renderAll();
+        toast('导入成功！');
+      } catch { toast('文件格式错误', 'error'); }
+    };
+    reader.readAsText(file);
+  });
   event.target.value = '';
 }
 
-async function clearAllData() {
-  if (confirm('确定要清除所有数据吗？此操作不可恢复！')) {
-    try { await fetch(API + '/logs', { method: 'DELETE' }); } catch (e) { console.error(e); }
-    logs = {};
-    renderAll();
-  }
+function clearAllData() {
+  requireParentAction(() => {
+    const modal = document.getElementById('confirmModal');
+    document.getElementById('confirmContent').innerHTML = `
+      <div class="confirm-body">
+        <div class="cb-emoji">⚠️</div>
+        <div class="cb-text">确定要清除所有数据吗？</div>
+        <div class="cb-sub">此操作不可恢复！</div>
+      </div>
+      <div class="confirm-btns">
+        <button class="btn-cancel" onclick="closeConfirmModal()">取消</button>
+        <button class="btn-confirm" onclick="doClearAll()" style="background:linear-gradient(135deg,var(--accent-pink),#c0392b)">确认清除</button>
+      </div>
+    `;
+    modal.classList.add('show');
+  });
 }
 
-function closeModal() { document.getElementById('dayModal').classList.remove('show'); }
-document.getElementById('dayModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+async function doClearAll() {
+  closeConfirmModal();
+  try {
+    await fetch(API + '/logs', { method: 'DELETE', headers: parentHeaders() });
+    logs = {};
+    balance = { earned: 0, spent: 0, balance: 0 };
+    renderAll();
+    toast('数据已清除');
+  } catch (e) { toast('清除失败', 'error'); }
+}
 
 // ===== Effects =====
-function showPointsPopup(event, pts) {
+function showPointsPopup(x, y, pts) {
   const popup = document.createElement('div');
   popup.className = 'points-popup';
   popup.textContent = `+${pts} ⭐`;
-  const touch = event.touches ? event.touches[0] : event;
-  popup.style.left = (touch.clientX || touch.pageX) + 'px';
-  popup.style.top = (touch.clientY || touch.pageY) + 'px';
+  popup.style.left = x + 'px';
+  popup.style.top = y + 'px';
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 1200);
 }
@@ -1258,6 +1918,10 @@ function spawnConfetti() {
     setTimeout(() => p.remove(), 2000);
   }
 }
+
+// Click outside modal to close
+document.getElementById('confirmModal').addEventListener('click', function(e) { if (e.target === this) closeConfirmModal(); });
+document.getElementById('pinModal').addEventListener('click', function(e) { if (e.target === this) closePinModal(); });
 
 init();
 </script>
